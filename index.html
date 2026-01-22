@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LimeVPN — обход блокировок</title>
+  <meta name="description" content="LimeVPN — конфиги для обхода блокировок и белых списков. Быстро, удобно и бесплатно." />
+  <style>
+    :root {
+      --green: #7CFF00;
+      --dark: #0f0f0f;
+      --gray: #1a1a1a;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
+      color: #fff;
+    }
+
+    header {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: #ccc;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background: var(--gray);
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 30px rgba(124, 255, 0, 0.05);
+    }
+
+    .card h2 {
+      color: var(--green);
+      margin-bottom: 15px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .feature {
+      background: #141414;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .btn {
+      padding: 14px 22px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      color: #000;
+      background: var(--green);
+      transition: 0.2s;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--green);
+      border: 2px solid var(--green);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(124, 255, 0, 0.3);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 10px;
+      color: #777;
+      font-size: 0.9rem;
+    }
+
+    code {
+      background: #000;
+      padding: 6px 10px;
+      border-radius: 6px;
+      color: var(--green);
+      display: inline-block;
+      margin-top: 10px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>LimeVPN</h1>
+  <p>
+    LimeVPN — это бесплатные VPN/Proxy конфиги, которые помогают
+    <strong>обходить блокировки</strong> и работать даже при
+    <strong>белых списках</strong>.
+  </p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>🚀 Возможности</h2>
+    <div class="features">
+      <div class="feature">🔓 Обход интернет-блокировок</div>
+      <div class="feature">📜 Работает с белыми списками</div>
+      <div class="feature">⚡ Быстрое подключение</div>
+      <div class="feature">🆓 Бесплатные конфиги</div>
+      <div class="feature">📱 Подходит для разных клиентов</div>
+      <div class="feature">🔄 Регулярные обновления</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📄 Конфиг</h2>
+    <p>Используй актуальный конфиг LimeVPN по ссылке ниже:</p>
+    <code>https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
+
+    <div class="buttons">
+      <a class="btn" href="https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt" target="_blank">
+        Скачать конфиг
+      </a>
+      <button class="btn secondary" onclick="copyConfig()">
+        Скопировать ссылку
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📢 Telegram</h2>
+    <p>
+      Подписывайся на наш Telegram-канал, чтобы получать новые конфиги и обновления.
+    </p>
+    <div class="buttons">
+      <a class="btn" href="https://t.me/LimeVPNProxy" target="_blank">
+        Перейти в Telegram
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  © 2026 LimeVPN • GitHub Pages
+</footer>
+
+<script>
+  function copyConfig() {
+    navigator.clipboard.writeText(
+      "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt"
+    ).then(() => {
+      alert("Ссылка на конфиг скопирована!");
+    });
+  }
+</script>
+
+</body>
+</html>
