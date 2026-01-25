@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LimeVPN — Live Monitor</title>
+  <title>LimeVPN — Лучший и Бесплатный</title>
   <style>
     :root {
       --green: #7CFF00;
@@ -39,42 +39,74 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
 
+    /* Мониторинг */
     .server-list { width: 100%; border-collapse: collapse; margin-top: 15px; }
     .server-list th { text-align: left; color: #555; font-size: 0.8rem; padding: 10px; }
     .server-list td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    
     .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--green); color: var(--green); }
-    .status-badge.checking { border-color: #ffaa00; color: #ffaa00; }
-    
     .ping-val { font-family: monospace; color: var(--green); }
 
-    .config-box { background: #000; padding: 15px; border-radius: 12px; border: 1px dashed var(--green); margin-bottom: 20px; }
-    code { color: var(--green); font-size: 0.85rem; word-break: break-all; }
+    /* Преимущества */
+    .reasons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .reason-item {
+      background: rgba(255,255,255,0.03);
+      padding: 20px;
+      border-radius: 16px;
+      text-align: center;
+      border: 1px solid rgba(124, 255, 0, 0.1);
+      transition: 0.3s;
+    }
+    .reason-item:hover {
+      border-color: var(--green);
+      background: rgba(124, 255, 0, 0.05);
+      transform: translateY(-5px);
+    }
+    .reason-item h3 { color: var(--green); margin: 0 0 5px 0; font-size: 1.1rem; }
+    .reason-item p { margin: 0; font-size: 0.9rem; color: #ccc; }
 
+    .check-yourself {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .check-yourself h2 { font-size: 2rem; color: #fff; margin-bottom: 10px; }
+    .check-yourself p { color: var(--green); font-weight: bold; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Кнопки */
     .btn {
       width: 100%; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; border: none;
       transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
-      text-decoration: none; background: var(--green); color: #000;
+      text-decoration: none; background: var(--green); color: #000; margin-top: 10px;
     }
     .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--green-glow); }
+    .btn-refresh { background: transparent; border: 1px solid var(--green); color: var(--green); font-size: 0.8rem; padding: 8px; width: auto; margin: 0 auto; }
 
-    .loader { text-align: center; padding: 20px; color: var(--green); font-weight: bold; }
+    .config-box { background: #000; padding: 15px; border-radius: 12px; border: 1px dashed var(--green); margin-bottom: 10px; }
+    code { color: var(--green); font-size: 0.85rem; word-break: break-all; }
+
+    footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>LimeVPN</h1>
-  <p>Проверка узлов через Cloudflare CP</p>
+  <p>Максимальная свобода. Нулевая стоимость.</p>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <h2>📡 Мониторинг через cp.cloudflare.com</h2>
-    <div id="loader" class="loader">Загрузка списка серверов...</div>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h2>📡 Статус узлов</h2>
+      <button class="btn btn-refresh" onclick="initMonitor()">🔄 Обновить статус</button>
+    </div>
     <div style="overflow-x: auto;">
-      <table class="server-list" id="serverTable" style="display: none;">
+      <table class="server-list" id="serverTable">
         <thead>
           <tr>
             <th>УЗЕЛ</th>
@@ -82,8 +114,37 @@
             <th>ОТКЛИК (CF)</th>
           </tr>
         </thead>
-        <tbody id="serverBody"></tbody>
+        <tbody id="serverBody">
+          <tr><td colspan="3" style="text-align: center; padding: 20px;">Загрузка конфигурации...</td></tr>
+        </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="justify-content: center;">Почему LimeVPN — лучший?</h2>
+    <div class="reasons">
+      <div class="reason-item">
+        <h3>100%</h3>
+        <p>Бесплатный</p>
+      </div>
+      <div class="reason-item">
+        <h3>100%</h3>
+        <p>Стабильный</p>
+      </div>
+      <div class="reason-item">
+        <h3>100%</h3>
+        <p>Анонимный</p>
+      </div>
+      <div class="reason-item">
+        <h3>100%</h3>
+        <p>Безопасный</p>
+      </div>
+    </div>
+    
+    <div class="check-yourself">
+      <h2>Не верите?</h2>
+      <p>Проверьте сами!</p>
     </div>
   </div>
 
@@ -93,36 +154,33 @@
       <code id="configUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
     </div>
     <button class="btn" onclick="copyConfig()">📋 СКОПИРОВАТЬ ССЫЛКУ</button>
+    <a class="btn" style="background: transparent; border: 2px solid #0088cc; color: #0088cc;" href="https://t.me/LimeVPNProxy" target="_blank">✈️ ТЕЛЕГРАМ КАНАЛ</a>
   </div>
 
 </div>
 
+<footer>© 2026 LIME VPN • ЧЕСТНЫЙ МОНИТОРИНГ</footer>
+
 <script>
   const CONFIG_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
-  const CHECK_URL = "https://cp.cloudflare.com/"; // Используем HTTPS для корректной работы в браузере
+  const CHECK_URL = "https://cp.cloudflare.com/";
 
   async function checkPing() {
     const start = Date.now();
     try {
-      // Пингуем Cloudflare
       await fetch(CHECK_URL, { mode: 'no-cors', cache: 'no-cache' });
       return Date.now() - start;
-    } catch (e) {
-      return null;
-    }
+    } catch (e) { return null; }
   }
 
   async function initMonitor() {
+    const serverBody = document.getElementById('serverBody');
     try {
       const response = await fetch(CONFIG_URL);
       const text = await response.text();
-      
       const lines = text.split('\n').filter(line => line.trim().length > 10);
-      const serverBody = document.getElementById('serverBody');
+      
       serverBody.innerHTML = '';
-
-      document.getElementById('loader').style.display = 'none';
-      document.getElementById('serverTable').style.display = 'table';
 
       for (let line of lines) {
         let serverName = "Unknown Node";
@@ -133,33 +191,30 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td><strong>${serverName}</strong></td>
-          <td><span class="status-badge checking">CHECKING</span></td>
-          <td><span class="ping-val">...</span></td>
+          <td><span class="status-badge" style="border-color: #555; color: #555;">...</span></td>
+          <td><span class="ping-val">pinging</span></td>
         `;
         serverBody.appendChild(row);
 
-        // Запускаем проверку для конкретной строки
-        updateRowStatus(row);
+        // Асинхронная проверка для каждого
+        checkPing().then(ping => {
+          const badge = row.querySelector('.status-badge');
+          const val = row.querySelector('.ping-val');
+          if (ping) {
+            badge.innerText = "ONLINE";
+            badge.style.borderColor = "var(--green)";
+            badge.style.color = "var(--green)";
+            val.innerText = ping + "ms";
+          } else {
+            badge.innerText = "OFFLINE";
+            badge.style.borderColor = "#ff4444";
+            badge.style.color = "#ff4444";
+            val.innerText = "—";
+          }
+        });
       }
     } catch (e) {
-      document.getElementById('loader').innerText = "Ошибка доступа к конфигу";
-    }
-  }
-
-  async function updateRowStatus(row) {
-    const ping = await checkPing();
-    const statusBadge = row.querySelector('.status-badge');
-    const pingVal = row.querySelector('.ping-val');
-
-    if (ping) {
-      statusBadge.innerText = "ONLINE";
-      statusBadge.className = "status-badge";
-      pingVal.innerText = ping + "ms";
-    } else {
-      statusBadge.innerText = "TIMEOUT";
-      statusBadge.style.color = "#ff4444";
-      statusBadge.style.borderColor = "#ff4444";
-      pingVal.innerText = "—";
+      serverBody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Ошибка загрузки данных</td></tr>';
     }
   }
 
