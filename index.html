@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LimeVPN — Real-time Status</title>
+  <title>LimeVPN — Live Monitor</title>
   <style>
     :root {
       --green: #7CFF00;
@@ -44,6 +44,8 @@
     .server-list td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     
     .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--green); color: var(--green); }
+    .status-badge.checking { border-color: #ffaa00; color: #ffaa00; }
+    
     .ping-val { font-family: monospace; color: var(--green); }
 
     .config-box { background: #000; padding: 15px; border-radius: 12px; border: 1px dashed var(--green); margin-bottom: 20px; }
@@ -63,21 +65,21 @@
 
 <header>
   <h1>LimeVPN</h1>
-  <p>Мониторинг активных ключей из подписки</p>
+  <p>Проверка узлов через Cloudflare CP</p>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <h2>📡 Живой список серверов</h2>
-    <div id="loader" class="loader">Парсинг подписки...</div>
+    <h2>📡 Мониторинг через cp.cloudflare.com</h2>
+    <div id="loader" class="loader">Загрузка списка серверов...</div>
     <div style="overflow-x: auto;">
       <table class="server-list" id="serverTable" style="display: none;">
         <thead>
           <tr>
-            <th>НАЗВАНИЕ УЗЛА</th>
+            <th>УЗЕЛ</th>
             <th>СТАТУС</th>
-            <th>ПИНГ (API)</th>
+            <th>ОТКЛИК (CF)</th>
           </tr>
         </thead>
         <tbody id="serverBody"></tbody>
@@ -97,53 +99,75 @@
 
 <script>
   const CONFIG_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
+  const CHECK_URL = "https://cp.cloudflare.com/"; // Используем HTTPS для корректной работы в браузере
 
-  async function fetchAndParseConfig() {
+  async function checkPing() {
+    const start = Date.now();
     try {
-      const start = Date.now();
+      // Пингуем Cloudflare
+      await fetch(CHECK_URL, { mode: 'no-cors', cache: 'no-cache' });
+      return Date.now() - start;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function initMonitor() {
+    try {
       const response = await fetch(CONFIG_URL);
       const text = await response.text();
-      const ping = Date.now() - start;
-
-      // Разбиваем файл на строки и ищем названия после символа #
-      const lines = text.split('\n').filter(line => line.trim() !== '');
+      
+      const lines = text.split('\n').filter(line => line.trim().length > 10);
       const serverBody = document.getElementById('serverBody');
       serverBody.innerHTML = '';
-
-      lines.forEach(line => {
-        // Извлекаем имя сервера (все, что после #)
-        let serverName = "Unnamed Server";
-        if (line.includes('#')) {
-          serverName = decodeURIComponent(line.split('#')[1]).trim();
-        } else if (line.startsWith('ss://')) {
-          serverName = "Shadowsocks Node";
-        }
-
-        const row = `
-          <tr>
-            <td><strong>${serverName}</strong></td>
-            <td><span class="status-badge">ONLINE</span></td>
-            <td><span class="ping-val">${ping + Math.floor(Math.random()*10)}ms</span></td>
-          </tr>
-        `;
-        serverBody.innerHTML += row;
-      });
 
       document.getElementById('loader').style.display = 'none';
       document.getElementById('serverTable').style.display = 'table';
 
+      for (let line of lines) {
+        let serverName = "Unknown Node";
+        if (line.includes('#')) {
+          serverName = decodeURIComponent(line.split('#')[1]).trim();
+        }
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><strong>${serverName}</strong></td>
+          <td><span class="status-badge checking">CHECKING</span></td>
+          <td><span class="ping-val">...</span></td>
+        `;
+        serverBody.appendChild(row);
+
+        // Запускаем проверку для конкретной строки
+        updateRowStatus(row);
+      }
     } catch (e) {
-      document.getElementById('loader').innerText = "Ошибка загрузки подписки";
-      document.getElementById('loader').style.color = "#ff4444";
+      document.getElementById('loader').innerText = "Ошибка доступа к конфигу";
+    }
+  }
+
+  async function updateRowStatus(row) {
+    const ping = await checkPing();
+    const statusBadge = row.querySelector('.status-badge');
+    const pingVal = row.querySelector('.ping-val');
+
+    if (ping) {
+      statusBadge.innerText = "ONLINE";
+      statusBadge.className = "status-badge";
+      pingVal.innerText = ping + "ms";
+    } else {
+      statusBadge.innerText = "TIMEOUT";
+      statusBadge.style.color = "#ff4444";
+      statusBadge.style.borderColor = "#ff4444";
+      pingVal.innerText = "—";
     }
   }
 
   function copyConfig() {
-    navigator.clipboard.writeText(CONFIG_URL).then(() => alert("Скопировано!"));
+    navigator.clipboard.writeText(CONFIG_URL).then(() => alert("Ссылка скопирована!"));
   }
 
-  // Запуск
-  fetchAndParseConfig();
+  initMonitor();
 </script>
 
 </body>
