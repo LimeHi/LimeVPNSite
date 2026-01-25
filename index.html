@@ -8,68 +8,95 @@
   <style>
     :root {
       --green: #7CFF00;
-      --dark: #0f0f0f;
-      --gray: #1a1a1a;
+      --green-dark: #62c900;
+      --dark: #0a0a0a;
+      --gray: rgba(26, 26, 26, 0.8);
     }
 
     * {
       box-sizing: border-box;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
       margin: 0;
-      background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
+      background: var(--dark);
       color: #fff;
+      line-height: 1.6;
     }
 
+    /* Улучшенный хедер с фоновой картинкой */
     header {
-      padding: 60px 20px;
+      position: relative;
+      padding: 120px 20px;
       text-align: center;
+      background: linear-gradient(rgba(0,0,0,0.6), rgba(10,10,10,1)), 
+                  url('background.png'); /* ЗАМЕНИТЕ НА ВАШ ФАЙЛ */
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
     }
 
     header h1 {
-      font-size: 3rem;
+      font-size: 4rem;
       color: var(--green);
-      margin-bottom: 10px;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      text-shadow: 0 0 20px rgba(124, 255, 0, 0.5);
     }
 
     header p {
-      font-size: 1.2rem;
-      color: #ccc;
-      max-width: 700px;
-      margin: 0 auto;
+      font-size: 1.3rem;
+      color: #eee;
+      max-width: 800px;
+      margin: 20px auto 0;
+      font-weight: 300;
     }
 
     .container {
       max-width: 1000px;
-      margin: 0 auto;
-      padding: 40px 20px;
+      margin: -50px auto 0; /* Наплыв на хедер */
+      padding: 0 20px 60px;
+      position: relative;
+      z-index: 2;
     }
 
     .card {
       background: var(--gray);
-      border-radius: 16px;
-      padding: 30px;
+      backdrop-filter: blur(10px); /* Эффект размытия */
+      border: 1px solid rgba(124, 255, 0, 0.1);
+      border-radius: 20px;
+      padding: 40px;
       margin-bottom: 30px;
-      box-shadow: 0 0 30px rgba(124, 255, 0, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .card h2 {
       color: var(--green);
-      margin-bottom: 15px;
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
     .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
     }
 
     .feature {
-      background: #141414;
-      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 15px 20px;
       border-radius: 12px;
+      border-left: 3px solid var(--green);
+      transition: 0.3s;
+    }
+
+    .feature:hover {
+      background: rgba(124, 255, 0, 0.1);
+      transform: translateX(5px);
     }
 
     .buttons {
@@ -77,17 +104,21 @@
       flex-wrap: wrap;
       gap: 15px;
       justify-content: center;
-      margin-top: 30px;
+      margin-top: 25px;
     }
 
     .btn {
-      padding: 14px 22px;
-      border-radius: 10px;
+      padding: 16px 30px;
+      border-radius: 12px;
       text-decoration: none;
       font-weight: bold;
       color: #000;
       background: var(--green);
-      transition: 0.2s;
+      transition: all 0.3s ease;
+      display: inline-block;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
     }
 
     .btn.secondary {
@@ -97,25 +128,45 @@
     }
 
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 20px rgba(124, 255, 0, 0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(124, 255, 0, 0.4);
+      background: var(--green-dark);
+      color: #000;
+    }
+
+    .btn.secondary:hover {
+      background: rgba(124, 255, 0, 0.1);
+      color: var(--green);
+    }
+
+    .config-box {
+      background: #000;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px dashed var(--green);
+      margin: 20px 0;
+      position: relative;
+    }
+
+    code {
+      color: var(--green);
+      word-break: break-all;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
     }
 
     footer {
       text-align: center;
-      padding: 30px 10px;
-      color: #777;
+      padding: 40px 20px;
+      color: #666;
       font-size: 0.9rem;
+      border-top: 1px solid #1a1a1a;
     }
 
-    code {
-      background: #000;
-      padding: 6px 10px;
-      border-radius: 6px;
-      color: var(--green);
-      display: inline-block;
-      margin-top: 10px;
-      word-break: break-all;
+    @media (max-width: 600px) {
+      header h1 { font-size: 2.5rem; }
+      .card { padding: 25px; }
+      .btn { width: 100%; text-align: center; }
     }
   </style>
 </head>
@@ -124,30 +175,31 @@
 <header>
   <h1>LimeVPN</h1>
   <p>
-    LimeVPN — это бесплатные VPN/Proxy конфиги, которые помогают
-    <strong>обходить блокировки</strong> и работать даже при
-    <strong>белых списках</strong>.
+    Мощные инструменты для свободного интернета. 
+    Работает там, где другие сдаются.
   </p>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <h2>🚀 Возможности</h2>
+    <h2>🚀 Преимущества</h2>
     <div class="features">
-      <div class="feature">🔓 Обход интернет-блокировок</div>
-      <div class="feature">📜 Работает с белыми списками</div>
-      <div class="feature">⚡ Быстрое подключение</div>
-      <div class="feature">🆓 Бесплатные конфиги</div>
-      <div class="feature">📱 Подходит для разных клиентов</div>
-      <div class="feature">🔄 Регулярные обновления</div>
+      <div class="feature">🔓 Обход любых блокировок</div>
+      <div class="feature">📜 Совместимость с White-листами</div>
+      <div class="feature">⚡ Минимальный пинг (Low Latency)</div>
+      <div class="feature">🆓 Полностью бесплатно</div>
+      <div class="feature">📱 iOS, Android, Windows, Linux</div>
+      <div class="feature">🔄 Автообновление узлов</div>
     </div>
   </div>
 
   <div class="card">
-    <h2>📄 Конфиг</h2>
-    <p>Используй актуальный конфиг LimeVPN по ссылке ниже:</p>
-    <code>https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
+    <h2>📄 Подключение</h2>
+    <p>Используйте этот URL в вашем приложении (V2Ray, Shadowsocks, Nekobox и др.):</p>
+    <div class="config-box">
+      <code id="configUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
+    </div>
 
     <div class="buttons">
       <a class="btn" href="https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt" target="_blank">
@@ -159,14 +211,12 @@
     </div>
   </div>
 
-  <div class="card">
-    <h2>📢 Telegram</h2>
-    <p>
-      Подписывайся на наш Telegram-канал, чтобы получать новые конфиги и обновления.
-    </p>
+  <div class="card" style="text-align: center;">
+    <h2>📢 Наше сообщество</h2>
+    <p>Узнавайте о новых зеркалах и обновлениях первыми в нашем канале.</p>
     <div class="buttons">
       <a class="btn" href="https://t.me/LimeVPNProxy" target="_blank">
-        Перейти в Telegram
+        Вступить в Telegram
       </a>
     </div>
   </div>
@@ -174,15 +224,14 @@
 </div>
 
 <footer>
-  © 2026 LimeVPN • GitHub Pages
+  © 2026 LimeVPN • Развернуто на GitHub Pages
 </footer>
 
 <script>
   function copyConfig() {
-    navigator.clipboard.writeText(
-      "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt"
-    ).then(() => {
-      alert("Ссылка на конфиг скопирована!");
+    const url = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
+    navigator.clipboard.writeText(url).then(() => {
+      alert("Ссылка успешно скопирована!");
     });
   }
 </script>
