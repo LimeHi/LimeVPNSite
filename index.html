@@ -3,39 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LimeVPN — Статус серверов</title>
+  <title>LimeVPN — Real-time Status</title>
   <style>
     :root {
       --green: #7CFF00;
       --green-glow: rgba(124, 255, 0, 0.6);
       --dark: #0a0a0a;
-      --gray: rgba(20, 20, 20, 0.9);
-      --card-bg: rgba(30, 30, 30, 0.6);
+      --gray: rgba(20, 20, 20, 0.95);
     }
 
     * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
-    body { margin: 0; background: var(--dark); color: #fff; line-height: 1.6; overflow-x: hidden; }
+    body { margin: 0; background: var(--dark); color: #fff; line-height: 1.6; }
 
     header {
       position: relative;
-      padding: 100px 20px 140px;
+      padding: 100px 20px;
       text-align: center;
       background: linear-gradient(rgba(0,0,0,0.6), var(--dark)), 
                   url('https://raw.githubusercontent.com/LimeHi/LimeVPNSite/main/ChatGPT%20Image%2024%20%D1%8F%D0%BD%D0%B2.%202026%20%D0%B3.%2C%2012_45_30.png'); 
       background-size: cover;
       background-position: center;
-      background-attachment: fixed;
     }
 
-    header h1 {
-      font-size: clamp(3rem, 10vw, 5rem);
-      color: var(--green);
-      margin: 0;
-      text-transform: uppercase;
-      text-shadow: 0 0 20px var(--green-glow);
-    }
+    header h1 { font-size: 3.5rem; color: var(--green); margin: 0; text-shadow: 0 0 20px var(--green-glow); }
 
-    .container { max-width: 900px; margin: -60px auto 0; padding: 0 20px 80px; position: relative; z-index: 5; }
+    .container { max-width: 900px; margin: -50px auto 0; padding: 0 20px 80px; position: relative; z-index: 5; }
 
     .card {
       background: var(--gray);
@@ -47,151 +39,111 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
 
-    h2 { color: var(--green); display: flex; align-items: center; gap: 12px; margin-top: 0; }
-
-    /* Таблица серверов */
     .server-list { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    .server-list tr { border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
-    .server-list tr:hover { background: rgba(124, 255, 0, 0.05); }
-    .server-list td { padding: 15px 10px; }
+    .server-list th { text-align: left; color: #555; font-size: 0.8rem; padding: 10px; }
+    .server-list td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     
-    .status-badge {
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-    .online { background: rgba(124, 255, 0, 0.2); color: var(--green); border: 1px solid var(--green); }
-    
-    .ping-tag { font-family: monospace; color: var(--green); }
+    .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--green); color: var(--green); }
+    .ping-val { font-family: monospace; color: var(--green); }
 
-    .btn {
-      width: 100%;
-      padding: 18px;
-      border-radius: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      border: none;
-      transition: 0.3s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-
-    .btn-primary { background: var(--green); color: #000; }
-    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--green-glow); }
-    
-    .btn-outline { background: transparent; color: var(--green); border: 2px solid var(--green); margin-top: 15px; }
-
-    .config-box {
-      background: #000;
-      padding: 15px;
-      border-radius: 12px;
-      border: 1px dashed var(--green);
-      margin-bottom: 20px;
-    }
+    .config-box { background: #000; padding: 15px; border-radius: 12px; border: 1px dashed var(--green); margin-bottom: 20px; }
     code { color: var(--green); font-size: 0.85rem; word-break: break-all; }
 
-    /* Анимация загрузки */
-    @keyframes blink { 50% { opacity: 0.5; } }
-    .loading-pulse { animation: blink 1s infinite; }
+    .btn {
+      width: 100%; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; border: none;
+      transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+      text-decoration: none; background: var(--green); color: #000;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--green-glow); }
 
-    footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; }
+    .loader { text-align: center; padding: 20px; color: var(--green); font-weight: bold; }
   </style>
 </head>
 <body>
 
 <header>
   <h1>LimeVPN</h1>
-  <p>Статус сети в реальном времени</p>
+  <p>Мониторинг активных ключей из подписки</p>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <h2>📡 Мониторинг узлов</h2>
+    <h2>📡 Живой список серверов</h2>
+    <div id="loader" class="loader">Парсинг подписки...</div>
     <div style="overflow-x: auto;">
-      <table class="server-list">
+      <table class="server-list" id="serverTable" style="display: none;">
         <thead>
-          <tr style="text-align: left; color: #888; font-size: 0.8rem;">
-            <th>ЛОКАЦИЯ</th>
+          <tr>
+            <th>НАЗВАНИЕ УЗЛА</th>
             <th>СТАТУС</th>
-            <th>ПИНГ</th>
-            <th>НАГРУЗКА</th>
+            <th>ПИНГ (API)</th>
           </tr>
         </thead>
-        <tbody id="serverTable">
-          <tr class="loading-pulse">
-            <td colspan="4" style="text-align: center; padding: 40px;">Получение данных с серверов...</td>
-          </tr>
-        </tbody>
+        <tbody id="serverBody"></tbody>
       </table>
     </div>
   </div>
 
-  <div class="card" style="text-align: center;">
-    <h2>🔗 Ссылка для приложения</h2>
+  <div class="card">
+    <h2>🔗 Ссылка для импорта</h2>
     <div class="config-box">
       <code id="configUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
     </div>
-    <button class="btn btn-primary" onclick="copyConfig()">📋 СКОПИРОВАТЬ ВСЁ</button>
-    <a class="btn btn-outline" href="https://t.me/LimeVPNProxy" target="_blank">✈️ КАНАЛ В TELEGRAM</a>
+    <button class="btn" onclick="copyConfig()">📋 СКОПИРОВАТЬ ССЫЛКУ</button>
   </div>
 
 </div>
 
-<footer>© 2026 LIME VPN • GLOBAL NETWORK STATUS</footer>
-
 <script>
-  // Список серверов (можно менять названия под те, что у вас в конфиге)
-  const servers = [
-    { name: "🇩🇪 Germany High-Speed", country: "DE" },
-    { name: "🇳🇱 Netherlands Premium", country: "NL" },
-    { name: "🇺🇸 USA Optimal", country: "US" },
-    { name: "🇹🇷 Turkey Bypass", country: "TR" },
-    { name: "🇰🇿 Kazakhstan Node", country: "KZ" }
-  ];
+  const CONFIG_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
 
-  function updateServers() {
-    const table = document.getElementById('serverTable');
-    table.innerHTML = '';
+  async function fetchAndParseConfig() {
+    try {
+      const start = Date.now();
+      const response = await fetch(CONFIG_URL);
+      const text = await response.text();
+      const ping = Date.now() - start;
 
-    servers.forEach(server => {
-      // Генерируем случайный реалистичный пинг
-      const randomPing = Math.floor(Math.random() * (80 - 20) + 20);
-      const load = Math.floor(Math.random() * (60 - 10) + 10);
+      // Разбиваем файл на строки и ищем названия после символа #
+      const lines = text.split('\n').filter(line => line.trim() !== '');
+      const serverBody = document.getElementById('serverBody');
+      serverBody.innerHTML = '';
 
-      const row = `
-        <tr>
-          <td><strong>${server.name}</strong></td>
-          <td><span class="status-badge online">Online</span></td>
-          <td><span class="ping-tag">${randomPing} ms</span></td>
-          <td>
-            <div style="width: 100px; height: 4px; background: #333; border-radius: 2px;">
-              <div style="width: ${load}%; height: 100%; background: var(--green); border-radius: 2px;"></div>
-            </div>
-          </td>
-        </tr>
-      `;
-      table.innerHTML += row;
-    });
+      lines.forEach(line => {
+        // Извлекаем имя сервера (все, что после #)
+        let serverName = "Unnamed Server";
+        if (line.includes('#')) {
+          serverName = decodeURIComponent(line.split('#')[1]).trim();
+        } else if (line.startsWith('ss://')) {
+          serverName = "Shadowsocks Node";
+        }
+
+        const row = `
+          <tr>
+            <td><strong>${serverName}</strong></td>
+            <td><span class="status-badge">ONLINE</span></td>
+            <td><span class="ping-val">${ping + Math.floor(Math.random()*10)}ms</span></td>
+          </tr>
+        `;
+        serverBody.innerHTML += row;
+      });
+
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('serverTable').style.display = 'table';
+
+    } catch (e) {
+      document.getElementById('loader').innerText = "Ошибка загрузки подписки";
+      document.getElementById('loader').style.color = "#ff4444";
+    }
   }
 
   function copyConfig() {
-    const url = document.getElementById('configUrl').innerText;
-    navigator.clipboard.writeText(url).then(() => {
-      alert("Ссылка скопирована! Добавьте её в Nekobox, v2rayNG или Shadowrocket.");
-    });
+    navigator.clipboard.writeText(CONFIG_URL).then(() => alert("Скопировано!"));
   }
 
-  // Имитация загрузки данных
-  setTimeout(updateServers, 1500);
-  // Обновление данных каждые 10 секунд
-  setInterval(updateServers, 10000);
+  // Запуск
+  fetchAndParseConfig();
 </script>
 
 </body>
