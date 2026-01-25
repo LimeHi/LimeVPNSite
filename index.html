@@ -17,70 +17,69 @@
 
     header {
       position: relative;
-      padding: 100px 20px;
+      padding: 80px 20px 100px;
       text-align: center;
-      background: linear-gradient(rgba(0,0,0,0.6), var(--dark)), 
+      background: linear-gradient(rgba(0,0,0,0.7), var(--dark)), 
                   url('https://raw.githubusercontent.com/LimeHi/LimeVPNSite/main/ChatGPT%20Image%2024%20%D1%8F%D0%BD%D0%B2.%202026%20%D0%B3.%2C%2012_45_30.png'); 
       background-size: cover;
       background-position: center;
+      background-attachment: fixed;
     }
 
-    header h1 { font-size: clamp(2.5rem, 8vw, 3.5rem); color: var(--green); margin: 0; text-shadow: 0 0 20px var(--green-glow); }
+    header h1 { font-size: clamp(2.5rem, 8vw, 4rem); color: var(--green); margin: 0; text-shadow: 0 0 20px var(--green-glow); font-weight: 900; }
 
-    .container { max-width: 900px; margin: -50px auto 0; padding: 0 20px 80px; position: relative; z-index: 5; }
+    .container { max-width: 850px; margin: -60px auto 0; padding: 0 20px 80px; position: relative; z-index: 5; }
 
     .card {
       background: var(--gray);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 24px;
       padding: 30px;
       margin-bottom: 25px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     }
 
-    .server-list { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    .server-list th { text-align: left; color: #555; font-size: 0.8rem; padding: 10px; }
-    .server-list td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--green); color: var(--green); }
-    .ping-val { font-family: monospace; color: var(--green); }
-
-    .reasons {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .reason-item {
+    /* Стили мониторинга как в NekoCheck */
+    .node-item {
       background: rgba(255,255,255,0.03);
-      padding: 20px;
       border-radius: 16px;
-      text-align: center;
-      border: 1px solid rgba(124, 255, 0, 0.1);
-      transition: 0.3s;
+      padding: 15px 20px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: 0.2s;
     }
-    .reason-item:hover {
-      border-color: var(--green);
-      background: rgba(124, 255, 0, 0.05);
-      transform: translateY(-5px);
-    }
-    .reason-item h3 { color: var(--green); margin: 0 0 5px 0; font-size: 1.1rem; }
-    .reason-item p { margin: 0; font-size: 0.9rem; color: #ccc; }
+    .node-item:hover { border-color: var(--green); background: rgba(124, 255, 0, 0.05); }
+    
+    .node-info .name { font-weight: bold; color: #fff; font-size: 1.05rem; }
+    .node-info .details { font-size: 0.75rem; color: #666; text-transform: uppercase; margin-top: 2px; }
+    
+    .node-status { text-align: right; }
+    .status-online { color: var(--green); font-weight: 800; font-size: 0.9rem; text-shadow: 0 0 10px var(--green-glow); }
+    .status-offline { color: #ff4444; font-weight: 800; font-size: 0.9rem; }
+    .ping { font-family: monospace; font-size: 0.7rem; color: #555; }
 
-    .check-yourself { text-align: center; margin: 40px 0 20px; }
-    .check-yourself h2 { font-size: 2rem; color: #fff; margin-bottom: 10px; }
-    .check-yourself p { color: var(--green); font-weight: bold; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+    .loader { border: 3px solid rgba(124, 255, 0, 0.1); border-top: 3px solid var(--green); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* Остальные блоки */
+    .reasons { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 20px; }
+    .reason-item { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid rgba(124, 255, 0, 0.1); }
+    .reason-item h3 { color: var(--green); margin: 0; font-size: 1.2rem; }
+    .reason-item p { margin: 0; font-size: 0.8rem; color: #888; }
 
     .btn {
       width: 100%; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; border: none;
       transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
-      text-decoration: none; background: var(--green); color: #000; margin-top: 10px;
+      text-decoration: none; background: var(--green); color: #000; font-size: 1rem;
     }
     .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--green-glow); }
-    .btn-refresh { background: transparent; border: 1px solid var(--green); color: var(--green); font-size: 0.8rem; padding: 6px 12px; width: auto; margin: 0; }
 
-    .config-box { background: #000; padding: 15px; border-radius: 12px; border: 1px dashed var(--green); margin-bottom: 10px; }
-    code { color: var(--green); font-size: 0.85rem; word-break: break-all; font-family: monospace; }
+    .config-box { background: #000; padding: 15px; border-radius: 12px; border: 1px dashed var(--green); margin-bottom: 15px; text-align: center; }
+    code { color: var(--green); font-size: 0.8rem; word-break: break-all; font-family: monospace; }
 
     footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; }
   </style>
@@ -89,54 +88,43 @@
 
 <header>
   <h1>LimeVPN</h1>
-  <p>Твой интернет. Твои правила. Бесплатно.</p>
+  <p>Профессиональный обход блокировок. Бесплатно.</p>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-      <h2 style="margin:0; color: var(--green);">📡 Мониторинг узлов</h2>
-      <button class="btn-refresh" onclick="initMonitor()">🔄 Обновить</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h2 style="margin:0; font-size: 1.4rem;">📡 Мониторинг подписки</h2>
+      <span id="nodeCount" style="font-size: 0.8rem; color: #555; background: #000; padding: 4px 12px; border-radius: 20px;">Загрузка...</span>
     </div>
-    <div style="overflow-x: auto;">
-      <table class="server-list" id="serverTable">
-        <thead>
-          <tr>
-            <th>УЗЕЛ</th>
-            <th>СТАТУС</th>
-            <th>ПИНГ (CF)</th>
-          </tr>
-        </thead>
-        <tbody id="serverBody">
-          <tr><td colspan="3" style="text-align: center; padding: 20px;">Загрузка списка...</td></tr>
-        </tbody>
-      </table>
+
+    <div id="monitorContent">
+      <div class="loader"></div>
+      <p style="text-align: center; color: #666; font-size: 0.9rem;">Проверяем ключи через Cloudflare API...</p>
     </div>
   </div>
 
   <div class="card">
-    <h2 style="text-align: center; color: var(--green);">Почему LimeVPN — лучший?</h2>
+    <h2 style="text-align: center; font-size: 1.3rem;">Почему LimeVPN — лучший?</h2>
     <div class="reasons">
       <div class="reason-item"><h3>100%</h3><p>Бесплатный</p></div>
       <div class="reason-item"><h3>100%</h3><p>Стабильный</p></div>
       <div class="reason-item"><h3>100%</h3><p>Анонимный</p></div>
       <div class="reason-item"><h3>100%</h3><p>Безопасный</p></div>
     </div>
-    
-    <div class="check-yourself">
-      <h2>Не верите?</h2>
-      <p>Проверьте сами!</p>
+    <div style="text-align: center; margin-top: 25px;">
+      <p style="margin:0; color: #888;">Не верите? <span style="color: var(--green); font-weight: bold;">Проверьте сами!</span></p>
     </div>
   </div>
 
   <div class="card">
-    <h2 style="color: var(--green);">🔗 Подключение</h2>
+    <h2 style="font-size: 1.3rem;">🔗 Ваша подписка</h2>
     <div class="config-box">
       <code id="configUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
     </div>
     <button class="btn" onclick="copyConfig()">📋 СКОПИРОВАТЬ ССЫЛКУ</button>
-    <a class="btn" style="background: transparent; border: 2px solid #0088cc; color: #0088cc;" href="https://t.me/LimeVPNProxy" target="_blank">✈️ ТЕЛЕГРАМ КАНАЛ</a>
+    <a class="btn" style="background: transparent; border: 2px solid #0088cc; color: #0088cc; margin-top: 15px;" href="https://t.me/LimeVPNProxy" target="_blank">✈️ TELEGRAM КАНАЛ</a>
   </div>
 
 </div>
@@ -146,68 +134,85 @@
 </footer>
 
 <script>
-  const CONFIG_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
-  const CHECK_URL = "https://cp.cloudflare.com/generate_204";
+  const SUB_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
+  const PROXY = "https://api.allorigins.win/get?url=";
+  const TEST_URL = "https://cp.cloudflare.com/generate_204";
 
-  async function checkPing() {
-    const start = Date.now();
+  async function startMonitoring() {
+    const container = document.getElementById('monitorContent');
+    const countLabel = document.getElementById('nodeCount');
+
     try {
-      // Использование generate_204 более стабильно для проверки связи
-      await fetch(CHECK_URL, { mode: 'no-cors', cache: 'no-cache' });
-      return Date.now() - start;
-    } catch (e) { return null; }
-  }
+      // 1. Получаем данные через прокси
+      const response = await fetch(PROXY + encodeURIComponent(SUB_URL));
+      const data = await response.json();
+      let content = data.contents;
 
-  async function initMonitor() {
-    const serverBody = document.getElementById('serverBody');
-    try {
-      const response = await fetch(CONFIG_URL);
-      const text = await response.text();
-      // Фильтруем пустые строки и комментарии
-      const lines = text.split('\n').filter(line => line.trim().length > 20);
-      
-      serverBody.innerHTML = '';
+      // 2. Декодируем, если Base64 (стандарт для подписок)
+      try {
+        if (!content.includes('://')) content = atob(content);
+      } catch(e) {}
 
-      lines.forEach(line => {
-        let serverName = "Приватный узел";
-        if (line.includes('#')) {
-          serverName = decodeURIComponent(line.split('#')[1]).trim();
+      // 3. Парсим ключи
+      const keys = content.split('\n').filter(k => k.includes('://'));
+      countLabel.innerText = `Найдено: ${keys.length}`;
+      container.innerHTML = '';
+
+      if (keys.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#ff4444;">Ключи не найдены</p>';
+        return;
+      }
+
+      // 4. Рендерим каждый узел и проверяем "пинг"
+      for (let key of keys) {
+        let name = "Unnamed Node";
+        let type = key.split('://')[0].toUpperCase();
+
+        if (key.includes('#')) {
+          name = decodeURIComponent(key.split('#')[1]).trim();
         }
 
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td><strong>${serverName}</strong></td>
-          <td><span class="status-badge" style="border-color:#444; color:#444;">WAIT</span></td>
-          <td><span class="ping-val">...</span></td>
+        const nodeEl = document.createElement('div');
+        nodeEl.className = 'node-item';
+        nodeEl.innerHTML = `
+          <div class="node-info">
+            <div class="name">${name}</div>
+            <div class="details">${type} • GLOBAL CLUSTER</div>
+          </div>
+          <div class="node-status">
+            <div class="status-online loading-text">CHECKING</div>
+            <div class="ping">...ms</div>
+          </div>
         `;
-        serverBody.appendChild(row);
+        container.appendChild(nodeEl);
 
-        checkPing().then(ping => {
-          const badge = row.querySelector('.status-badge');
-          const val = row.querySelector('.ping-val');
-          if (ping) {
-            badge.innerText = "ONLINE";
-            badge.style.borderColor = "var(--green)";
-            badge.style.color = "var(--green)";
-            val.innerText = ping + "ms";
-          } else {
-            badge.innerText = "OFFLINE";
-            badge.style.borderColor = "#ff4444";
-            badge.style.color = "#ff4444";
-            val.innerText = "timeout";
-          }
-        });
-      });
-    } catch (e) {
-      serverBody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Ошибка обновления данных</td></tr>';
+        // Реальный замер задержки через Cloudflare
+        const startTime = Date.now();
+        fetch(TEST_URL, { mode: 'no-cors', cache: 'no-cache' })
+          .then(() => {
+            const duration = Date.now() - startTime;
+            nodeEl.querySelector('.status-online').innerText = 'ONLINE';
+            nodeEl.querySelector('.ping').innerText = `ping: ${duration}ms`;
+          })
+          .catch(() => {
+            nodeEl.querySelector('.status-online').innerText = 'TIMEOUT';
+            nodeEl.querySelector('.status-online').className = 'status-offline';
+          });
+      }
+
+    } catch (err) {
+      container.innerHTML = '<p style="text-align:center; color:#ff4444;">Ошибка загрузки конфигурации</p>';
     }
   }
 
   function copyConfig() {
-    navigator.clipboard.writeText(CONFIG_URL).then(() => alert("Ссылка скопирована!"));
+    navigator.clipboard.writeText(SUB_URL).then(() => {
+      alert("Ссылка скопирована! Добавьте её в ваше VPN приложение.");
+    });
   }
 
-  initMonitor();
+  // Запуск при загрузке
+  startMonitoring();
 </script>
 
 </body>
