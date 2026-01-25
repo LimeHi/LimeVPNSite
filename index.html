@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LimeVPN — Лучший и Бесплатный</title>
+  <title>LimeVPN — Самый безопасный VPN</title>
   <style>
     :root {
       --green: #7CFF00;
@@ -25,7 +25,7 @@
       background-position: center;
     }
 
-    header h1 { font-size: 3.5rem; color: var(--green); margin: 0; text-shadow: 0 0 20px var(--green-glow); }
+    header h1 { font-size: clamp(2.5rem, 8vw, 3.5rem); color: var(--green); margin: 0; text-shadow: 0 0 20px var(--green-glow); }
 
     .container { max-width: 900px; margin: -50px auto 0; padding: 0 20px 80px; position: relative; z-index: 5; }
 
@@ -39,17 +39,15 @@
       box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
 
-    /* Мониторинг */
     .server-list { width: 100%; border-collapse: collapse; margin-top: 15px; }
     .server-list th { text-align: left; color: #555; font-size: 0.8rem; padding: 10px; }
     .server-list td { padding: 12px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .status-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; border: 1px solid var(--green); color: var(--green); }
     .ping-val { font-family: monospace; color: var(--green); }
 
-    /* Преимущества */
     .reasons {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 15px;
       margin-top: 20px;
     }
@@ -69,24 +67,20 @@
     .reason-item h3 { color: var(--green); margin: 0 0 5px 0; font-size: 1.1rem; }
     .reason-item p { margin: 0; font-size: 0.9rem; color: #ccc; }
 
-    .check-yourself {
-      text-align: center;
-      margin-top: 40px;
-    }
+    .check-yourself { text-align: center; margin: 40px 0 20px; }
     .check-yourself h2 { font-size: 2rem; color: #fff; margin-bottom: 10px; }
     .check-yourself p { color: var(--green); font-weight: bold; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* Кнопки */
     .btn {
       width: 100%; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; border: none;
       transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
       text-decoration: none; background: var(--green); color: #000; margin-top: 10px;
     }
     .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--green-glow); }
-    .btn-refresh { background: transparent; border: 1px solid var(--green); color: var(--green); font-size: 0.8rem; padding: 8px; width: auto; margin: 0 auto; }
+    .btn-refresh { background: transparent; border: 1px solid var(--green); color: var(--green); font-size: 0.8rem; padding: 6px 12px; width: auto; margin: 0; }
 
     .config-box { background: #000; padding: 15px; border-radius: 12px; border: 1px dashed var(--green); margin-bottom: 10px; }
-    code { color: var(--green); font-size: 0.85rem; word-break: break-all; }
+    code { color: var(--green); font-size: 0.85rem; word-break: break-all; font-family: monospace; }
 
     footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; }
   </style>
@@ -95,15 +89,15 @@
 
 <header>
   <h1>LimeVPN</h1>
-  <p>Максимальная свобода. Нулевая стоимость.</p>
+  <p>Твой интернет. Твои правила. Бесплатно.</p>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h2>📡 Статус узлов</h2>
-      <button class="btn btn-refresh" onclick="initMonitor()">🔄 Обновить статус</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <h2 style="margin:0; color: var(--green);">📡 Мониторинг узлов</h2>
+      <button class="btn-refresh" onclick="initMonitor()">🔄 Обновить</button>
     </div>
     <div style="overflow-x: auto;">
       <table class="server-list" id="serverTable">
@@ -111,35 +105,23 @@
           <tr>
             <th>УЗЕЛ</th>
             <th>СТАТУС</th>
-            <th>ОТКЛИК (CF)</th>
+            <th>ПИНГ (CF)</th>
           </tr>
         </thead>
         <tbody id="serverBody">
-          <tr><td colspan="3" style="text-align: center; padding: 20px;">Загрузка конфигурации...</td></tr>
+          <tr><td colspan="3" style="text-align: center; padding: 20px;">Загрузка списка...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
   <div class="card">
-    <h2 style="justify-content: center;">Почему LimeVPN — лучший?</h2>
+    <h2 style="text-align: center; color: var(--green);">Почему LimeVPN — лучший?</h2>
     <div class="reasons">
-      <div class="reason-item">
-        <h3>100%</h3>
-        <p>Бесплатный</p>
-      </div>
-      <div class="reason-item">
-        <h3>100%</h3>
-        <p>Стабильный</p>
-      </div>
-      <div class="reason-item">
-        <h3>100%</h3>
-        <p>Анонимный</p>
-      </div>
-      <div class="reason-item">
-        <h3>100%</h3>
-        <p>Безопасный</p>
-      </div>
+      <div class="reason-item"><h3>100%</h3><p>Бесплатный</p></div>
+      <div class="reason-item"><h3>100%</h3><p>Стабильный</p></div>
+      <div class="reason-item"><h3>100%</h3><p>Анонимный</p></div>
+      <div class="reason-item"><h3>100%</h3><p>Безопасный</p></div>
     </div>
     
     <div class="check-yourself">
@@ -149,7 +131,7 @@
   </div>
 
   <div class="card">
-    <h2>🔗 Ссылка для импорта</h2>
+    <h2 style="color: var(--green);">🔗 Подключение</h2>
     <div class="config-box">
       <code id="configUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
     </div>
@@ -159,15 +141,18 @@
 
 </div>
 
-<footer>© 2026 LIME VPN • ЧЕСТНЫЙ МОНИТОРИНГ</footer>
+<footer>
+  © 2026 LIME VPN • Самый безопасный VPN
+</footer>
 
 <script>
   const CONFIG_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
-  const CHECK_URL = "https://cp.cloudflare.com/";
+  const CHECK_URL = "https://cp.cloudflare.com/generate_204";
 
   async function checkPing() {
     const start = Date.now();
     try {
+      // Использование generate_204 более стабильно для проверки связи
       await fetch(CHECK_URL, { mode: 'no-cors', cache: 'no-cache' });
       return Date.now() - start;
     } catch (e) { return null; }
@@ -178,12 +163,13 @@
     try {
       const response = await fetch(CONFIG_URL);
       const text = await response.text();
-      const lines = text.split('\n').filter(line => line.trim().length > 10);
+      // Фильтруем пустые строки и комментарии
+      const lines = text.split('\n').filter(line => line.trim().length > 20);
       
       serverBody.innerHTML = '';
 
-      for (let line of lines) {
-        let serverName = "Unknown Node";
+      lines.forEach(line => {
+        let serverName = "Приватный узел";
         if (line.includes('#')) {
           serverName = decodeURIComponent(line.split('#')[1]).trim();
         }
@@ -191,12 +177,11 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td><strong>${serverName}</strong></td>
-          <td><span class="status-badge" style="border-color: #555; color: #555;">...</span></td>
-          <td><span class="ping-val">pinging</span></td>
+          <td><span class="status-badge" style="border-color:#444; color:#444;">WAIT</span></td>
+          <td><span class="ping-val">...</span></td>
         `;
         serverBody.appendChild(row);
 
-        // Асинхронная проверка для каждого
         checkPing().then(ping => {
           const badge = row.querySelector('.status-badge');
           const val = row.querySelector('.ping-val');
@@ -209,12 +194,12 @@
             badge.innerText = "OFFLINE";
             badge.style.borderColor = "#ff4444";
             badge.style.color = "#ff4444";
-            val.innerText = "—";
+            val.innerText = "timeout";
           }
         });
-      }
+      });
     } catch (e) {
-      serverBody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Ошибка загрузки данных</td></tr>';
+      serverBody.innerHTML = '<tr><td colspan="3" style="color:red; text-align:center;">Ошибка обновления данных</td></tr>';
     }
   }
 
