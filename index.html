@@ -8,14 +8,14 @@
   <style>
     :root {
       --green: #7CFF00;
-      --green-dark: #62c900;
+      --green-glow: rgba(124, 255, 0, 0.6);
       --dark: #0a0a0a;
-      --gray: rgba(26, 26, 26, 0.85);
+      --gray: rgba(20, 20, 20, 0.8);
     }
 
     * {
       box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
     }
 
     body {
@@ -25,115 +25,109 @@
       line-height: 1.6;
     }
 
-    /* Хедер с использованием вашей картинки */
+    /* Хедер с прямой ссылкой на ваше изображение */
     header {
       position: relative;
-      padding: 140px 20px;
+      padding: clamp(100px, 15vh, 180px) 20px;
       text-align: center;
-      /* bg.png — переименуйте вашу картинку так или замените название здесь */
-      background: linear-gradient(rgba(0,0,0,0.7), rgba(10,10,10,1)), 
-                  url('bg.png'); 
+      /* Используем raw ссылку для корректного отображения */
+      background: linear-gradient(rgba(0,0,0,0.5), var(--dark)), 
+                  url('https://raw.githubusercontent.com/LimeHi/LimeVPNSite/main/ChatGPT%20Image%2024%20%D1%8F%D0%BD%D0%B2.%202026%20%D0%B3.%2C%2012_45_30.png'); 
       background-size: cover;
       background-position: center;
-      border-bottom: 1px solid rgba(124, 255, 0, 0.2);
+      background-attachment: fixed; /* Эффект параллакса */
     }
 
     header h1 {
-      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-size: clamp(3rem, 10vw, 5rem);
       color: var(--green);
       margin: 0;
+      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 5px;
-      text-shadow: 0 0 30px rgba(124, 255, 0, 0.4);
+      letter-spacing: -2px;
+      text-shadow: 0 0 20px var(--green-glow), 0 0 40px rgba(0,0,0,0.5);
     }
 
     header p {
-      font-size: 1.2rem;
-      color: #eee;
-      max-width: 700px;
-      margin: 20px auto 0;
-      font-weight: 300;
-      opacity: 0.9;
+      font-size: 1.25rem;
+      color: #fff;
+      max-width: 650px;
+      margin: 15px auto 0;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
 
     .container {
-      max-width: 1000px;
-      margin: -60px auto 0;
+      max-width: 900px;
+      margin: -40px auto 0;
       padding: 0 20px 80px;
       position: relative;
-      z-index: 2;
+      z-index: 5;
     }
 
     .card {
       background: var(--gray);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
       padding: 40px;
-      margin-bottom: 30px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      margin-bottom: 25px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     }
 
     .card h2 {
       color: var(--green);
       margin-top: 0;
-      font-size: 1.8rem;
-      margin-bottom: 25px;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .features {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
     }
 
     .feature {
-      background: rgba(255, 255, 255, 0.03);
-      padding: 18px 22px;
-      border-radius: 15px;
-      border-left: 4px solid var(--green);
-      transition: 0.3s ease;
-    }
-
-    .feature:hover {
-      background: rgba(124, 255, 0, 0.08);
-      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 16px;
+      border-radius: 12px;
+      border-left: 3px solid var(--green);
+      font-weight: 500;
     }
 
     .config-box {
       background: #000;
-      padding: 18px;
-      border-radius: 14px;
-      border: 1px solid rgba(124, 255, 0, 0.3);
-      margin: 25px 0;
-      text-align: center;
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid var(--green);
+      margin: 20px 0;
+      box-shadow: inset 0 0 15px rgba(124, 255, 0, 0.1);
     }
 
     code {
       color: var(--green);
       word-break: break-all;
-      font-family: 'Consolas', monospace;
+      font-family: 'Consolas', 'Monaco', monospace;
       font-size: 0.95rem;
     }
 
-    .buttons {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
     .btn {
-      padding: 18px 40px;
-      border-radius: 14px;
+      width: 100%;
+      max-width: 350px;
+      padding: 18px;
+      border-radius: 16px;
       text-decoration: none;
-      font-weight: bold;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      cursor: pointer;
+      font-weight: 800;
       font-size: 1.1rem;
+      cursor: pointer;
       border: none;
+      transition: all 0.3s ease;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 10px;
     }
 
@@ -142,29 +136,36 @@
       color: #000;
     }
 
-    .btn-secondary {
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px var(--green-glow);
+      filter: brightness(1.1);
+    }
+
+    .btn-telegram {
       background: transparent;
       color: var(--green);
       border: 2px solid var(--green);
+      margin-top: 10px;
     }
 
-    .btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 10px 30px rgba(124, 255, 0, 0.3);
+    .btn-telegram:hover {
+      background: rgba(124, 255, 0, 0.1);
+      transform: translateY(-3px);
     }
 
     footer {
       text-align: center;
       padding: 40px;
-      color: #555;
+      color: #444;
       font-size: 0.85rem;
+      letter-spacing: 1px;
     }
 
     @media (max-width: 600px) {
-      header { padding: 100px 20px; }
-      .container { margin-top: -40px; }
+      header { padding: 80px 20px; }
       .card { padding: 25px; }
-      .btn { width: 100%; justify-content: center; }
+      .container { margin-top: -30px; }
     }
   </style>
 </head>
@@ -172,59 +173,53 @@
 
 <header>
   <h1>LimeVPN</h1>
-  <p>Конфиги для свободного интернета. Быстро, стабильно и всегда бесплатно.</p>
+  <p>Твой ключ к свободному интернету без границ и цензуры.</p>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <h2>⚡ Почему LimeVPN?</h2>
+    <h2>🚀 Особенности</h2>
     <div class="features">
-      <div class="feature">🔓 Обход любых типов блокировок</div>
-      <div class="feature">📜 Стабильная работа в белых списках</div>
-      <div class="feature">🚀 Высокая скорость соединения</div>
-      <div class="feature">📱 Поддержка всех платформ</div>
-      <div class="feature">🔄 Регулярное обновление узлов</div>
-      <div class="feature">🛡️ Полная анонимность трафика</div>
+      <div class="feature">🔓 Обход блокировок</div>
+      <div class="feature">⚡ Высокая скорость</div>
+      <div class="feature">🆓 100% Бесплатно</div>
+      <div class="feature">🛡️ Анонимность</div>
     </div>
   </div>
 
   <div class="card" style="text-align: center;">
-    <h2>🔗 Ссылка для подписки</h2>
-    <p>Скопируйте URL и вставьте его в ваше приложение для импорта всех конфигов сразу.</p>
+    <h2>🔗 Настройка прокси</h2>
+    <p>Скопируйте ссылку и добавьте её в ваше приложение (V2Ray, Shadowsocks, Nekobox):</p>
     
     <div class="config-box">
       <code id="configUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
     </div>
 
-    <div class="buttons">
-      <button class="btn btn-primary" onclick="copyConfig()">
-        📋 Скопировать ссылку
-      </button>
-    </div>
+    <button class="btn btn-primary" onclick="copyConfig()">
+      📋 СКОПИРОВАТЬ ССЫЛКУ
+    </button>
   </div>
 
   <div class="card" style="text-align: center;">
-    <h2>📢 Новости и поддержка</h2>
-    <p>Подписывайтесь на наш Telegram, чтобы не потерять доступ и получать новые прокси.</p>
-    <div class="buttons">
-      <a class="btn btn-secondary" href="https://t.me/LimeVPNProxy" target="_blank">
-        💬 Наш Telegram канал
-      </a>
-    </div>
+    <h2>📢 Будь на связи</h2>
+    <p>Свежие узлы и новости проекта в нашем Telegram канале.</p>
+    <a class="btn btn-telegram" href="https://t.me/LimeVPNProxy" target="_blank">
+      ✈️ ПЕРЕЙТИ В TELEGRAM
+    </a>
   </div>
 
 </div>
 
 <footer>
-  © 2026 LimeVPN • Проект с открытым исходным кодом
+  © 2026 LIME VPN • POWERED BY GITHUB
 </footer>
 
 <script>
   function copyConfig() {
     const url = document.getElementById('configUrl').innerText;
     navigator.clipboard.writeText(url).then(() => {
-      alert("Ссылка успешно скопирована! Теперь вставьте её в ваше VPN приложение.");
+      alert("Ссылка скопирована! Вставьте её в настройки вашего приложения.");
     });
   }
 </script>
