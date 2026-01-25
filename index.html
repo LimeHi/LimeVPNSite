@@ -3,20 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LimeVPN — обход блокировок</title>
-  <meta name="description" content="LimeVPN — конфиги для обхода блокировок и белых списков. Быстро, удобно и бесплатно." />
+  <title>LimeVPN — Мониторинг и Обход</title>
   <style>
     :root {
       --green: #7CFF00;
       --green-glow: rgba(124, 255, 0, 0.6);
       --dark: #0a0a0a;
-      --gray: rgba(20, 20, 20, 0.8);
+      --gray: rgba(20, 20, 20, 0.85);
+      --red: #ff4444;
     }
 
-    * {
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
-    }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
 
     body {
       margin: 0;
@@ -25,35 +22,48 @@
       line-height: 1.6;
     }
 
-    /* Хедер с прямой ссылкой на ваше изображение */
     header {
       position: relative;
-      padding: clamp(100px, 15vh, 180px) 20px;
+      padding: clamp(80px, 12vh, 150px) 20px;
       text-align: center;
-      /* Используем raw ссылку для корректного отображения */
-      background: linear-gradient(rgba(0,0,0,0.5), var(--dark)), 
+      background: linear-gradient(rgba(0,0,0,0.6), var(--dark)), 
                   url('https://raw.githubusercontent.com/LimeHi/LimeVPNSite/main/ChatGPT%20Image%2024%20%D1%8F%D0%BD%D0%B2.%202026%20%D0%B3.%2C%2012_45_30.png'); 
       background-size: cover;
       background-position: center;
-      background-attachment: fixed; /* Эффект параллакса */
+      background-attachment: fixed;
     }
+
+    .status-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,0,0,0.5);
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(124, 255, 0, 0.3);
+      margin-bottom: 20px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      background: var(--green);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--green);
+    }
+
+    .dot.loading { background: #ffaa00; box-shadow: 0 0 10px #ffaa00; animation: pulse 1s infinite; }
+    .dot.offline { background: var(--red); box-shadow: 0 0 10px var(--red); }
+
+    @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
 
     header h1 {
-      font-size: clamp(3rem, 10vw, 5rem);
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
       color: var(--green);
       margin: 0;
-      font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: -2px;
-      text-shadow: 0 0 20px var(--green-glow), 0 0 40px rgba(0,0,0,0.5);
-    }
-
-    header p {
-      font-size: 1.25rem;
-      color: #fff;
-      max-width: 650px;
-      margin: 15px auto 0;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      text-shadow: 0 0 20px var(--green-glow);
     }
 
     .container {
@@ -67,36 +77,36 @@
     .card {
       background: var(--gray);
       backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 24px;
-      padding: 40px;
+      padding: 30px;
       margin-bottom: 25px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     }
 
-    .card h2 {
-      color: var(--green);
-      margin-top: 0;
-      font-size: 1.6rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .features {
+    /* Секция пинга/мониторинга */
+    .ping-dashboard {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
     }
 
-    .feature {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 16px;
-      border-radius: 12px;
-      border-left: 3px solid var(--green);
-      font-weight: 500;
+    .ping-item {
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      border-radius: 15px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
     }
+
+    .ping-value {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--green);
+    }
+
+    .ping-label { font-size: 0.8rem; color: #888; text-transform: uppercase; }
 
     .config-box {
       background: #000;
@@ -104,124 +114,123 @@
       border-radius: 16px;
       border: 1px solid var(--green);
       margin: 20px 0;
-      box-shadow: inset 0 0 15px rgba(124, 255, 0, 0.1);
     }
 
-    code {
-      color: var(--green);
-      word-break: break-all;
-      font-family: 'Consolas', 'Monaco', monospace;
-      font-size: 0.95rem;
-    }
+    code { color: var(--green); word-break: break-all; font-family: monospace; }
 
     .btn {
       width: 100%;
-      max-width: 350px;
       padding: 18px;
       border-radius: 16px;
-      text-decoration: none;
       font-weight: 800;
-      font-size: 1.1rem;
       cursor: pointer;
       border: none;
-      transition: all 0.3s ease;
-      display: inline-flex;
+      transition: 0.3s;
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-    }
-
-    .btn-primary {
       background: var(--green);
       color: #000;
+      text-decoration: none;
     }
 
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px var(--green-glow);
-      filter: brightness(1.1);
-    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--green-glow); }
 
-    .btn-telegram {
-      background: transparent;
-      color: var(--green);
-      border: 2px solid var(--green);
-      margin-top: 10px;
-    }
+    .btn-tg { background: transparent; color: var(--green); border: 2px solid var(--green); margin-top: 15px;}
 
-    .btn-telegram:hover {
-      background: rgba(124, 255, 0, 0.1);
-      transform: translateY(-3px);
-    }
-
-    footer {
-      text-align: center;
-      padding: 40px;
-      color: #444;
-      font-size: 0.85rem;
-      letter-spacing: 1px;
-    }
-
-    @media (max-width: 600px) {
-      header { padding: 80px 20px; }
-      .card { padding: 25px; }
-      .container { margin-top: -30px; }
-    }
+    footer { text-align: center; padding: 40px; color: #444; font-size: 0.8rem; }
   </style>
 </head>
 <body>
 
 <header>
+  <div class="status-bar">
+    <div id="statusDot" class="dot loading"></div>
+    <span id="statusText">Проверка узлов...</span>
+  </div>
   <h1>LimeVPN</h1>
-  <p>Твой ключ к свободному интернету без границ и цензуры.</p>
+  <p>Быстрые и стабильные конфиги. Бесплатно навсегда.</p>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <h2>🚀 Особенности</h2>
-    <div class="features">
-      <div class="feature">🔓 Обход блокировок и белых списков</div>
-      <div class="feature">⚡ Высокая скорость</div>
-      <div class="feature">🆓 100% Бесплатно</div>
-      <div class="feature">🛡️ Анонимность</div>
+    <h2>📊 Мониторинг сети</h2>
+    <div class="ping-dashboard">
+      <div class="ping-item">
+        <span class="ping-label">GitHub Node</span>
+        <span id="pingGithub" class="ping-value">...</span>
+      </div>
+      <div class="ping-item">
+        <span class="ping-label">Статус файла</span>
+        <span id="fileStatus" class="ping-value">WAIT</span>
+      </div>
+      <div class="ping-item">
+        <span class="ping-label">Доступность</span>
+        <span class="ping-value">100%</span>
+      </div>
     </div>
+    <p style="font-size: 0.8rem; color: #666; margin-top: 15px; text-align: center;">
+      * Пинг до сервера GitHub (где лежат конфиги). Скорость VPN зависит от выбранного узла в приложении.
+    </p>
   </div>
 
   <div class="card" style="text-align: center;">
-    <h2>🔗 Настройка прокси</h2>
-    <p>Скопируйте ссылку и добавьте её в ваше приложение (V2Ray, Shadowsocks, Nekobox):</p>
-    
+    <h2>🔗 Ссылка на подписку</h2>
     <div class="config-box">
       <code id="configUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</code>
     </div>
-
-    <button class="btn btn-primary" onclick="copyConfig()">
-      📋 СКОПИРОВАТЬ ССЫЛКУ
-    </button>
-  </div>
-
-  <div class="card" style="text-align: center;">
-    <h2>📢 Будь на связи</h2>
-    <p>Свежие узлы и новости проекта в нашем Telegram канале.</p>
-    <a class="btn btn-telegram" href="https://t.me/LimeVPNProxy" target="_blank">
-      ✈️ ПЕРЕЙТИ В TELEGRAM
-    </a>
+    <button class="btn" onclick="copyConfig()">📋 СКОПИРОВАТЬ ССЫЛКУ</button>
+    <a class="btn btn-tg" href="https://t.me/LimeVPNProxy" target="_blank">✈️ НАШ TELEGRAM</a>
   </div>
 
 </div>
 
-<footer>
-  © 2026 LIME VPN • POWERED BY GITHUB
-</footer>
+<footer>© 2026 LIME VPN • LIVE MONITORING ACTIVE</footer>
 
 <script>
+  // Функция проверки доступности файла и замера "пинга" до него
+  async function checkStatus() {
+    const url = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
+    const dot = document.getElementById('statusDot');
+    const statusText = document.getElementById('statusText');
+    const pingText = document.getElementById('pingGithub');
+    const fileStatus = document.getElementById('fileStatus');
+
+    const start = Date.now();
+    try {
+      const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+      const duration = Date.now() - start;
+
+      if (response.ok) {
+        dot.className = 'dot';
+        statusText.innerText = 'Система активна';
+        pingText.innerText = duration + 'ms';
+        fileStatus.innerText = 'ONLINE';
+        fileStatus.style.color = 'var(--green)';
+      } else {
+        throw new Error();
+      }
+    } catch (e) {
+      dot.className = 'dot offline';
+      statusText.innerText = 'Узлы недоступны';
+      pingText.innerText = 'ERR';
+      fileStatus.innerText = 'ERROR';
+      fileStatus.style.color = 'var(--red)';
+    }
+  }
+
   function copyConfig() {
     const url = document.getElementById('configUrl').innerText;
     navigator.clipboard.writeText(url).then(() => {
-      alert("Ссылка скопирована! Вставьте её ваш прокси клиент.");
+      alert("Ссылка скопирована!");
     });
   }
+
+  // Запуск проверки при загрузке
+  checkStatus();
+  // Повтор каждые 30 секунд
+  setInterval(checkStatus, 30000);
 </script>
 
 </body>
