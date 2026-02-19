@@ -3,84 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Определитель IP-адреса</title>
+    <title>Мои сетевые данные</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f0f2f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            color: #333;
         }
-        .container {
-            background: #fff;
+        .card {
+            background: white;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: left;
+            width: 100%;
+            max-width: 450px;
         }
-        h1 { font-size: 20px; margin-bottom: 20px; color: #555; }
-        #ip-box {
-            font-size: 24px;
-            font-weight: bold;
-            color: #007bff;
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            border: 1px solid #eee;
-            min-height: 30px;
+        h1 { font-size: 22px; color: #333; text-align: center; margin-bottom: 25px; }
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
         }
-        .error { color: #dc3545; font-size: 16px; }
-        .loading { color: #6c757d; font-size: 16px; font-style: italic; }
+        .data-row:last-child { border-bottom: none; }
+        .label { color: #888; font-weight: 500; }
+        .value { color: #007bff; font-weight: bold; }
+        .loading { text-align: center; color: #666; font-style: italic; }
+        #error-msg { color: #dc3545; text-align: center; display: none; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Ваш публичный IP-адрес</h1>
-        <div id="ip-box">
-            <span class="loading">Определение...</span>
+    <div class="card">
+        <h1>Информация о подключении</h1>
+        <div id="content">
+            <div class="loading">Получение данных из глобальной сети...</div>
         </div>
+        <div id="error-msg">Не удалось загрузить данные. Проверьте соединение.</div>
     </div>
 
     <script>
-        async function getIP() {
-            const display = document.getElementById('ip-box');
-            
-            // Список резервных сервисов
-            const apis = [
-                'https://api.ipify.org?format=json',
-                'https://ipapi.co/json/',
-                'https://api.seeip.org/jsonip'
-            ];
+        async function getGeoData() {
+            const content = document.getElementById('content');
+            const errorMsg = document.getElementById('error-msg');
 
-            for (const url of apis) {
-                try {
-                    const response = await fetch(url, { timeout: 5000 });
-                    if (!response.ok) throw new Error();
-                    
-                    const data = await response.json();
-                    const ip = data.ip || data.query; // Разные API используют разные ключи
-                    
-                    if (ip) {
-                        display.innerHTML = ip;
-                        return; // Выход при успехе
-                    }
-                } catch (err) {
-                    console.error("Ошибка при обращении к " + url);
-                }
+            try {
+                // Запрос к сервису с расширенными данными
+                const response = await fetch('https://ipapi.co/json/');
+                
+                if (!response.ok) throw new Error('Ошибка API');
+                
+                const data = await response.json();
+
+                // Формируем детальный вывод
+                content.innerHTML = `
+                    <div class="data-row">
+                        <span class="label">IP-адрес:</span>
+                        <span class="value">${data.ip}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Страна:</span>
+                        <span class="value">${data.country_name}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Город:</span>
+                        <span class="value">${data.city}</span>
+                    </div>
+                    <div class="data-row">
+                        <span class="label">Провайдер:</span>
+                        <span class="value">${data.org}</span>
+                    </div>
+                `;
+            } catch (error) {
+                console.error(error);
+                content.style.display = 'none';
+                errorMsg.style.display = 'block';
             }
-
-            display.innerHTML = '<span class="error">Не удалось получить IP. Попробуйте отключить AdBlock.</span>';
         }
 
-        // Вызов функции
-        getIP();
+        window.onload = getGeoData;
     </script>
 
 </body>
