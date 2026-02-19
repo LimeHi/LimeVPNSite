@@ -3,107 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Определитель IP и Геолокации</title>
+    <title>Узнать IP адрес - MyIP.ru Style</title>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f4f7f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f7f7f7;
             margin: 0;
+            padding: 20px;
+            color: #333;
         }
-        .card {
-            background: white;
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        .main-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 18px;
+            border-bottom: 2px solid #0055aa;
+            padding-bottom: 10px;
+            margin-top: 0;
+            color: #0055aa;
+        }
+        .ip-table {
             width: 100%;
-            max-width: 400px;
+            border-collapse: collapse;
+            margin-top: 15px;
         }
-        h2 { text-align: center; color: #333; margin-bottom: 1.5rem; font-weight: 500; }
-        .info-group { margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f0f0f0; }
-        .label { display: block; font-size: 12px; color: #999; text-transform: uppercase; margin-bottom: 4px; }
-        .value { display: block; font-size: 18px; color: #222; font-weight: 600; min-height: 24px; }
-        .status { text-align: center; font-size: 14px; margin-top: 1rem; }
-        .error { color: #e74c3c; }
-        .loading { color: #3498db; }
+        .ip-table td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .label {
+            width: 40%;
+            font-weight: bold;
+            color: #666;
+        }
+        .value {
+            width: 60%;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 18px;
+            color: #000;
+        }
+        .geo-info {
+            font-size: 14px;
+            color: #444;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 11px;
+            color: #999;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Ваши данные</h2>
+<div class="main-container">
+    <h1>Ваш IP адрес и данные о подключении</h1>
     
-    <div class="info-group">
-        <span class="label">IP-адрес</span>
-        <span id="ip" class="value">...</span>
-    </div>
+    <table class="ip-table">
+        <tr>
+            <td class="label">Ваш IP адрес:</td>
+            <td class="value" id="user-ip">Загрузка...</td>
+        </tr>
+        <tr>
+            <td class="label">Имя компьютера (Host):</td>
+            <td class="value geo-info" id="user-host">Определяется...</td>
+        </tr>
+        <tr>
+            <td class="label">Страна / Город:</td>
+            <td class="value geo-info" id="user-geo">Определяется...</td>
+        </tr>
+    </table>
 
-    <div class="info-group">
-        <span class="label">Местоположение</span>
-        <span id="location" class="value">...</span>
+    <div class="footer">
+        Информация получена на основе данных вашего сетевого узла.
     </div>
-
-    <div class="info-group">
-        <span class="label">Провайдер</span>
-        <span id="isp" class="value">...</span>
-    </div>
-
-    <div id="status" class="status loading">Инициализация...</div>
 </div>
 
 <script>
-    async function loadData() {
-        const elements = {
-            ip: document.getElementById('ip'),
-            loc: document.getElementById('location'),
-            isp: document.getElementById('isp'),
-            status: document.getElementById('status')
-        };
+    async function fetchMyIPData() {
+        const ipElem = document.getElementById('user-ip');
+        const hostElem = document.getElementById('user-host');
+        const geoElem = document.getElementById('user-geo');
 
-        // Список сервисов для последовательной проверки
-        const sources = [
-            { url: 'https://ipapi.co/json/', type: 'standard' },
-            { url: 'https://ipwho.is/', type: 'whois' },
-            { url: 'https://extreme-ip-lookup.com/json/', type: 'extreme' }
-        ];
+        try {
+            // Используем сервис ip-api.com, который часто используется для подобных задач
+            const response = await fetch('http://ip-api.com/json/?fields=status,message,country,city,as,query,isp');
+            
+            // Если браузер блокирует HTTP запрос на HTTPS сайте, используем альтернативу
+            if (!response.ok) throw new Error();
+            
+            const data = await response.json();
 
-        for (let source of sources) {
-            try {
-                elements.status.className = 'status loading';
-                elements.status.innerText = 'Подключение к узлу...';
-                
-                const response = await fetch(source.url);
-                if (!response.ok) throw new Error();
-                
-                const data = await response.json();
-                
-                // Унификация данных из разных API
-                const ip = data.ip || data.query;
-                const country = data.country_name || data.country || "Неизвестно";
-                const city = data.city || "Неизвестно";
-                const org = data.org || data.connection?.isp || data.isp || "Частная сеть";
-
-                // Вывод данных
-                elements.ip.innerText = ip;
-                elements.loc.innerText = `${city}, ${country}`;
-                elements.isp.innerText = org;
-                
-                elements.status.className = 'status';
-                elements.status.innerText = 'Данные успешно получены';
-                return; // Успех, выходим из цикла
-            } catch (err) {
-                console.warn(`Источник ${source.url} недоступен`);
+            if (data.status === "success") {
+                ipElem.innerText = data.query;
+                hostElem.innerText = data.as || "Не определено";
+                geoElem.innerText = `${data.country}, ${data.city}`;
+            } else {
+                throw new Error();
             }
+        } catch (error) {
+            // Резервный вариант через другой API
+            const resAlt = await fetch('https://ipapi.co/json/');
+            const dataAlt = await resAlt.json();
+            
+            ipElem.innerText = dataAlt.ip;
+            hostElem.innerText = dataAlt.org;
+            geoElem.innerText = `${dataAlt.country_name}, ${dataAlt.city || 'Неизвестен'}`;
         }
-
-        elements.status.className = 'status error';
-        elements.status.innerText = 'Ошибка: API заблокированы вашим браузером или провайдером.';
     }
 
-    window.onload = loadData;
+    window.onload = fetchMyIPData;
 </script>
 
 </body>
