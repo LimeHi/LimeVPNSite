@@ -1,86 +1,32 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Определитель IP-адреса</title>
-    <style>
-        /* Лаконичный и современный дизайн */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: #ffffff;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-        h1 {
-            color: #1c1e21;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        #ip-display {
-            font-size: 28px;
-            font-weight: bold;
-            color: #007bff;
-            padding: 15px;
-            border: 1px solid #e1e4e8;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            word-break: break-all;
-        }
-        .loader {
-            color: #65676b;
-            font-style: italic;
-        }
-        footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #90949c;
-        }
-    </style>
-</head>
-<body>
+<script>
+    async function fetchIP() {
+        const display = document.getElementById('ip-display');
+        
+        // Список надежных API
+        const services = [
+            'https://api.ipify.org?format=json',
+            'https://ipapi.co/json/',
+            'https://ipinfo.io/json'
+        ];
 
-    <div class="container">
-        <h1>Ваш IP-адрес:</h1>
-        <div id="ip-display">
-            <span class="loader">Выполняется запрос...</span>
-        </div>
-        <footer>Данные обновляются в режиме реального времени</footer>
-    </div>
-
-    <script>
-        // Функция для получения IP-адреса через сторонний API
-        async function fetchIP() {
-            const display = document.getElementById('ip-display');
+        for (let url of services) {
             try {
-                // Используем сервис ipify (формат JSON)
-                const response = await fetch('https://api.ipify.org?format=json');
-                if (!response.ok) throw new Error('Ошибка сети');
+                const response = await fetch(url);
+                if (!response.ok) continue; // Если этот сервис подвел, пробуем следующий
                 
                 const data = await response.json();
                 display.textContent = data.ip;
-            } catch (error) {
-                display.style.color = 'red';
-                display.textContent = 'Ошибка при получении данных';
-                console.error('Ошибка:', error);
+                display.style.color = '#007bff'; // Возвращаем синий цвет при успехе
+                return; // Успешно получили IP, выходим из цикла
+            } catch (e) {
+                console.warn(`Сервис ${url} недоступен, пробуем следующий...`);
             }
         }
 
-        // Запуск функции при загрузке страницы
-        window.onload = fetchIP;
-    </script>
+        // Если ни один сервис не ответил
+        display.style.color = 'red';
+        display.textContent = 'Ошибка: проверьте интернет или выключите VPN';
+    }
 
-</body>
-</html>
+    window.onload = fetchIP;
+</script>
