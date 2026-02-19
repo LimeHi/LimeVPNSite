@@ -1,124 +1,121 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Узнать IP адрес - MyIP.ru Style</title>
-    <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background-color: #f7f7f7;
-            margin: 0;
-            padding: 20px;
+    <meta charset="utf-8">
+    <title>Ваш IP-адрес. Узнать IP адрес, определить IP-адрес</title>
+    <style type="text/css">
+        * { padding:0; margin:0; }
+        body { font-family: Arial, sans-serif; background-color: #fff; }
+        table { border-collapse:collapse; width:100%; }
+        a { color:#888888; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        
+        .container { 
+            position:relative; 
+            width:500px; 
+            margin-left:-250px; 
+            left:50%; 
+            top:60px; 
+        }
+        
+        table.network-info td, table.network-info th { 
+            border:solid 1px #43AA2E; 
+            padding:10px; 
+            text-align:center; 
+        }
+        
+        table.network-info th { 
+            background-color:#E0EED3; 
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .data-value {
+            font-size: 18px;
+            font-weight: bold;
             color: #333;
         }
-        .main-container {
-            max-width: 600px;
-            margin: 50px auto;
-            background: #fff;
-            border: 1px solid #ccc;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1 {
-            font-size: 18px;
-            border-bottom: 2px solid #0055aa;
-            padding-bottom: 10px;
-            margin-top: 0;
-            color: #0055aa;
-        }
-        .ip-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-        .ip-table td {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
-        .label {
-            width: 40%;
-            font-weight: bold;
+
+        .geo-text {
+            font-size: 13px;
             color: #666;
         }
-        .value {
-            width: 60%;
-            font-family: "Courier New", Courier, monospace;
-            font-size: 18px;
-            color: #000;
-        }
-        .geo-info {
-            font-size: 14px;
-            color: #444;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 11px;
-            color: #999;
-            text-align: center;
-        }
+
+        .copy { padding:15px 10px 5px; font-size:14px; color:#888888; text-align: left; }
+        .promo { text-align:center; padding:20px; line-height:25px; font-size: 13px; }
+        .promo > a { color:#0055aa; }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <h1>Ваш IP адрес и данные о подключении</h1>
-    
-    <table class="ip-table">
-        <tr>
-            <td class="label">Ваш IP адрес:</td>
-            <td class="value" id="user-ip">Загрузка...</td>
-        </tr>
-        <tr>
-            <td class="label">Имя компьютера (Host):</td>
-            <td class="value geo-info" id="user-host">Определяется...</td>
-        </tr>
-        <tr>
-            <td class="label">Страна / Город:</td>
-            <td class="value geo-info" id="user-geo">Определяется...</td>
-        </tr>
-    </table>
+    <div class="container">
+        <div id="ipcontent">
+            <table class="network-info">
+                <tbody>
+                    <tr><th>Ваш IP-адрес</th></tr>
+                    <tr>
+                        <td class="data-value" id="user-ip">Определение...</td>
+                    </tr>
+                    <tr><th>Имя вашего хоста / Провайдер</th></tr>
+                    <tr>
+                        <td id="user-host">Загрузка данных...</td>
+                    </tr>
+                    <tr><th>Местоположение</th></tr>
+                    <tr>
+                        <td class="geo-text" id="user-geo">Определение города и страны...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-    <div class="footer">
-        Информация получена на основе данных вашего сетевого узла.
+        <div class="copy">
+            <a href="#">Ваш Сайт</a>&nbsp;<sup>©</sup>&nbsp;2026
+        </div>
+        
+        <div class="promo">
+            <a href="#">Получить IP-адреса и автономную систему</a><br>
+            <a href="#">Услуги цифрового телевидения</a>
+        </div>
     </div>
-</div>
 
-<script>
-    async function fetchMyIPData() {
-        const ipElem = document.getElementById('user-ip');
-        const hostElem = document.getElementById('user-host');
-        const geoElem = document.getElementById('user-geo');
+    <script>
+        async function getMyIPData() {
+            const ipField = document.getElementById('user-ip');
+            const hostField = document.getElementById('user-host');
+            const geoField = document.getElementById('user-geo');
 
-        try {
-            // Используем сервис ip-api.com, который часто используется для подобных задач
-            const response = await fetch('http://ip-api.com/json/?fields=status,message,country,city,as,query,isp');
-            
-            // Если браузер блокирует HTTP запрос на HTTPS сайте, используем альтернативу
-            if (!response.ok) throw new Error();
-            
-            const data = await response.json();
+            try {
+                // Используем надежный API для получения всех данных сразу
+                const response = await fetch('https://ipapi.co/json/');
+                if (!response.ok) throw new Error();
+                
+                const data = await response.json();
 
-            if (data.status === "success") {
-                ipElem.innerText = data.query;
-                hostElem.innerText = data.as || "Не определено";
-                geoElem.innerText = `${data.country}, ${data.city}`;
-            } else {
-                throw new Error();
+                // Заполняем таблицу данными
+                ipField.innerText = data.ip;
+                hostField.innerText = data.org || "Данные не предоставлены";
+                geoField.innerText = `${data.city}, ${data.country_name}`;
+                
+            } catch (error) {
+                // Если первый сервис не сработал, пробуем резервный
+                try {
+                    const resAlt = await fetch('https://ipwho.is/');
+                    const dataAlt = await resAlt.json();
+                    
+                    ipField.innerText = dataAlt.ip;
+                    hostField.innerText = dataAlt.connection.isp;
+                    geoField.innerText = `${dataAlt.city}, ${dataAlt.country}`;
+                } catch (e) {
+                    ipField.innerText = "Ошибка";
+                    hostField.innerText = "Не удалось определить провайдера";
+                    geoField.innerText = "Не удалось определить геопозицию";
+                }
             }
-        } catch (error) {
-            // Резервный вариант через другой API
-            const resAlt = await fetch('https://ipapi.co/json/');
-            const dataAlt = await resAlt.json();
-            
-            ipElem.innerText = dataAlt.ip;
-            hostElem.innerText = dataAlt.org;
-            geoElem.innerText = `${dataAlt.country_name}, ${dataAlt.city || 'Неизвестен'}`;
         }
-    }
 
-    window.onload = fetchMyIPData;
-</script>
+        // Запуск при загрузке страницы
+        window.onload = getMyIPData;
+    </script>
 
 </body>
 </html>
