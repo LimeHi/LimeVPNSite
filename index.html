@@ -2,91 +2,43 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <title>Ваш IP-адрес. Узнать IP адрес, определить IP-адрес</title>
+    <title>Сайт на техническом обслуживании</title>
     <style type="text/css">
-        * { padding:0; margin:0; }
-        body { font-family: Arial, sans-serif; background-color: #fff; padding-top: 50px; }
-        table { border-collapse:collapse; width:100%; }
-        .container { 
-            position:relative; 
-            width:500px; 
-            margin: 0 auto;
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
         }
-        table.network-info td, table.network-info th { 
-            border:solid 1px #43AA2E; 
-            padding:8px; 
-            text-align:center; 
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            max-width: 500px;
         }
-        table.network-info th { 
-            background-color:#E0EED3; 
-            font-size: 14px;
+        h1 {
+            font-size: 24px;
+            color: #0055aa;
+            margin-bottom: 15px;
         }
-        .ip-value {
-            font-size: 18px;
-            font-weight: bold;
-            color: #000;
+        p {
+            font-size: 16px;
+            color: #666;
         }
-        .copy { padding:10px; font-size:14px; color:#888888; }
-        .promo { text-align:center; padding:5px; line-height:25px; font-size: 13px; }
-        .promo a { color: #888; text-decoration: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <div id="ipcontent">
-            <table class="network-info">
-                <tbody>
-                    <tr><th>Ваш IP-адрес</th></tr>
-                    <tr><td class="ip-value" id="user-ip">Загрузка...</td></tr>
-                    <tr><th>Имя вашего хоста</th></tr>
-                    <tr><td id="user-host">Определяется...</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="copy">
-            <a href="https://www.netup.tv/" style="text-decoration:none; color:#888;">Net<strong>UP</strong></a>&nbsp;<sup>©</sup>&nbsp;2026
-        </div>
-        <div class="promo">
-            <a href="#">Получить IP-адреса и автономную систему</a><br>
-            <a href="#">Цифровое телевидение IPTV</a>
-        </div>
+        <h1>Сайт на переделке</h1>
+        <p>В данный момент мы проводим технические работы. Пожалуйста, зайдите позже.</p>
     </div>
 
-    <script>
-        async function fetchIPData() {
-            const ipDisplay = document.getElementById('user-ip');
-            const hostDisplay = document.getElementById('user-host');
-
-            // Используем только HTTPS API, чтобы избежать блокировок на Vercel
-            const apiUrls = [
-                'https://ipapi.co/json/',
-                'https://ipwho.is/'
-            ];
-
-            for (let url of apiUrls) {
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) continue;
-
-                    const data = await response.json();
-                    
-                    // Заполняем таблицу
-                    ipDisplay.innerText = data.ip || data.query;
-                    hostDisplay.innerText = data.org || data.connection?.isp || "Не определен";
-                    
-                    return; // Успешно вышли
-                } catch (e) {
-                    console.error("Ошибка при обращении к " + url);
-                }
-            }
-
-            ipDisplay.innerText = "Ошибка";
-            hostDisplay.innerText = "Проверьте блокировщики рекламы";
-        }
-
-        window.onload = fetchIPData;
-    </script>
 </body>
 </html>
