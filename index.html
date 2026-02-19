@@ -1,32 +1,87 @@
-<script>
-    async function fetchIP() {
-        const display = document.getElementById('ip-display');
-        
-        // Список надежных API
-        const services = [
-            'https://api.ipify.org?format=json',
-            'https://ipapi.co/json/',
-            'https://ipinfo.io/json'
-        ];
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Определитель IP-адреса</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 { font-size: 20px; margin-bottom: 20px; color: #555; }
+        #ip-box {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #eee;
+            min-height: 30px;
+        }
+        .error { color: #dc3545; font-size: 16px; }
+        .loading { color: #6c757d; font-size: 16px; font-style: italic; }
+    </style>
+</head>
+<body>
 
-        for (let url of services) {
-            try {
-                const response = await fetch(url);
-                if (!response.ok) continue; // Если этот сервис подвел, пробуем следующий
-                
-                const data = await response.json();
-                display.textContent = data.ip;
-                display.style.color = '#007bff'; // Возвращаем синий цвет при успехе
-                return; // Успешно получили IP, выходим из цикла
-            } catch (e) {
-                console.warn(`Сервис ${url} недоступен, пробуем следующий...`);
+    <div class="container">
+        <h1>Ваш публичный IP-адрес</h1>
+        <div id="ip-box">
+            <span class="loading">Определение...</span>
+        </div>
+    </div>
+
+    <script>
+        async function getIP() {
+            const display = document.getElementById('ip-box');
+            
+            // Список резервных сервисов
+            const apis = [
+                'https://api.ipify.org?format=json',
+                'https://ipapi.co/json/',
+                'https://api.seeip.org/jsonip'
+            ];
+
+            for (const url of apis) {
+                try {
+                    const response = await fetch(url, { timeout: 5000 });
+                    if (!response.ok) throw new Error();
+                    
+                    const data = await response.json();
+                    const ip = data.ip || data.query; // Разные API используют разные ключи
+                    
+                    if (ip) {
+                        display.innerHTML = ip;
+                        return; // Выход при успехе
+                    }
+                } catch (err) {
+                    console.error("Ошибка при обращении к " + url);
+                }
             }
+
+            display.innerHTML = '<span class="error">Не удалось получить IP. Попробуйте отключить AdBlock.</span>';
         }
 
-        // Если ни один сервис не ответил
-        display.style.color = 'red';
-        display.textContent = 'Ошибка: проверьте интернет или выключите VPN';
-    }
+        // Вызов функции
+        getIP();
+    </script>
 
-    window.onload = fetchIP;
-</script>
+</body>
+</html>
