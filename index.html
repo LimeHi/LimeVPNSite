@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мои сетевые данные</title>
+    <title>Определитель IP и Геолокации</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f7f6;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -16,78 +16,95 @@
         }
         .card {
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            text-align: left;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
         }
-        h1 { font-size: 22px; color: #333; text-align: center; margin-bottom: 25px; }
-        .data-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .data-row:last-child { border-bottom: none; }
-        .label { color: #888; font-weight: 500; }
-        .value { color: #007bff; font-weight: bold; }
-        .loading { text-align: center; color: #666; font-style: italic; }
-        #error-msg { color: #dc3545; text-align: center; display: none; margin-top: 10px; }
+        h2 { text-align: center; color: #333; margin-bottom: 1.5rem; font-weight: 500; }
+        .info-group { margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #f0f0f0; }
+        .label { display: block; font-size: 12px; color: #999; text-transform: uppercase; margin-bottom: 4px; }
+        .value { display: block; font-size: 18px; color: #222; font-weight: 600; min-height: 24px; }
+        .status { text-align: center; font-size: 14px; margin-top: 1rem; }
+        .error { color: #e74c3c; }
+        .loading { color: #3498db; }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <h1>Информация о подключении</h1>
-        <div id="content">
-            <div class="loading">Получение данных из глобальной сети...</div>
-        </div>
-        <div id="error-msg">Не удалось загрузить данные. Проверьте соединение.</div>
+<div class="card">
+    <h2>Ваши данные</h2>
+    
+    <div class="info-group">
+        <span class="label">IP-адрес</span>
+        <span id="ip" class="value">...</span>
     </div>
 
-    <script>
-        async function getGeoData() {
-            const content = document.getElementById('content');
-            const errorMsg = document.getElementById('error-msg');
+    <div class="info-group">
+        <span class="label">Местоположение</span>
+        <span id="location" class="value">...</span>
+    </div>
 
+    <div class="info-group">
+        <span class="label">Провайдер</span>
+        <span id="isp" class="value">...</span>
+    </div>
+
+    <div id="status" class="status loading">Инициализация...</div>
+</div>
+
+<script>
+    async function loadData() {
+        const elements = {
+            ip: document.getElementById('ip'),
+            loc: document.getElementById('location'),
+            isp: document.getElementById('isp'),
+            status: document.getElementById('status')
+        };
+
+        // Список сервисов для последовательной проверки
+        const sources = [
+            { url: 'https://ipapi.co/json/', type: 'standard' },
+            { url: 'https://ipwho.is/', type: 'whois' },
+            { url: 'https://extreme-ip-lookup.com/json/', type: 'extreme' }
+        ];
+
+        for (let source of sources) {
             try {
-                // Запрос к сервису с расширенными данными
-                const response = await fetch('https://ipapi.co/json/');
+                elements.status.className = 'status loading';
+                elements.status.innerText = 'Подключение к узлу...';
                 
-                if (!response.ok) throw new Error('Ошибка API');
+                const response = await fetch(source.url);
+                if (!response.ok) throw new Error();
                 
                 const data = await response.json();
+                
+                // Унификация данных из разных API
+                const ip = data.ip || data.query;
+                const country = data.country_name || data.country || "Неизвестно";
+                const city = data.city || "Неизвестно";
+                const org = data.org || data.connection?.isp || data.isp || "Частная сеть";
 
-                // Формируем детальный вывод
-                content.innerHTML = `
-                    <div class="data-row">
-                        <span class="label">IP-адрес:</span>
-                        <span class="value">${data.ip}</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="label">Страна:</span>
-                        <span class="value">${data.country_name}</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="label">Город:</span>
-                        <span class="value">${data.city}</span>
-                    </div>
-                    <div class="data-row">
-                        <span class="label">Провайдер:</span>
-                        <span class="value">${data.org}</span>
-                    </div>
-                `;
-            } catch (error) {
-                console.error(error);
-                content.style.display = 'none';
-                errorMsg.style.display = 'block';
+                // Вывод данных
+                elements.ip.innerText = ip;
+                elements.loc.innerText = `${city}, ${country}`;
+                elements.isp.innerText = org;
+                
+                elements.status.className = 'status';
+                elements.status.innerText = 'Данные успешно получены';
+                return; // Успех, выходим из цикла
+            } catch (err) {
+                console.warn(`Источник ${source.url} недоступен`);
             }
         }
 
-        window.onload = getGeoData;
-    </script>
+        elements.status.className = 'status error';
+        elements.status.innerText = 'Ошибка: API заблокированы вашим браузером или провайдером.';
+    }
+
+    window.onload = loadData;
+</script>
 
 </body>
 </html>
