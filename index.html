@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LimeVPN — Стабильность и Безопасность</title>
+    <title>LIME VPN — Стабильность и Свобода</title>
     <style>
         :root {
             --lime-color: #32CD32;
             --dark-bg: #0a0a0a;
             --card-bg: #161616;
             --text-light: #ffffff;
+            --tg-blue: #24A1DE;
         }
 
         body {
@@ -20,7 +21,7 @@
             overflow-x: hidden;
         }
 
-        /* Эффект плавного ухода фона */
+        /* Hero Section с эффектом параллакса */
         .hero-section {
             position: relative;
             height: 100vh;
@@ -29,85 +30,105 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            /* Ваше изображение */
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
                         url('https://raw.githubusercontent.com/LimeHi/LimeVPNSite/main/ChatGPT%20Image%2024%20%D1%8F%D0%BD%D0%B2.%202026%20%D0%B3.%2C%2012_45_30.png');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Создает эффект движения текста поверх фона */
+            background-attachment: fixed;
             padding: 0 10%;
         }
 
         .hero-section h1 {
-            font-size: 4rem;
+            font-size: 5rem;
             color: var(--lime-color);
             margin: 0;
             text-transform: uppercase;
+            letter-spacing: 15px; /* Увеличенный межбуквенный интервал для LIME VPN */
+            font-weight: 900;
         }
 
         .hero-section p {
             font-size: 1.5rem;
-            max-width: 800px;
-            margin-top: 20px;
-            color: #e0e0e0;
-            line-height: 1.4;
+            max-width: 850px;
+            margin-top: 30px;
+            color: #f0f0f0;
+            line-height: 1.6;
+            font-weight: 300;
         }
 
-        /* Основной контент, который "наезжает" сверху */
+        /* Контентная часть */
         .content-wrapper {
             position: relative;
-            z-index: 2;
+            z-index: 10;
             background: var(--dark-bg);
             padding-bottom: 100px;
         }
 
         .sticky-card {
             position: sticky;
-            top: 20px; /* Кнопки "прилипнут" к верху при скролле */
+            top: 50px;
             max-width: 700px;
-            margin: -50px auto 0; /* Приподнимаем карту на Hero секцию */
+            margin: -80px auto 0;
             background: var(--card-bg);
-            padding: 40px;
-            border-radius: 30px;
+            padding: 45px;
+            border-radius: 35px;
             border: 1px solid #333;
             text-align: center;
-            box-shadow: 0 -10px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
         }
 
         .sub-url-box {
             background: #000;
-            padding: 15px;
-            border-radius: 12px;
-            font-family: monospace;
+            padding: 18px;
+            border-radius: 15px;
+            font-family: 'Consolas', monospace;
             color: var(--lime-color);
             word-break: break-all;
-            margin: 20px 0;
+            margin: 25px 0;
             border: 1px solid #222;
+            font-size: 0.9rem;
         }
 
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 20px;
             flex-wrap: wrap;
+            margin-bottom: 25px;
         }
 
+        /* Кнопки */
         .btn {
-            padding: 16px 30px;
+            padding: 18px 35px;
             border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             border: none;
-            min-width: 200px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-primary { background: var(--lime-color); color: #000; }
         .btn-secondary { background: transparent; color: var(--lime-color); border: 2px solid var(--lime-color); }
 
-        .btn:hover { transform: scale(1.05); }
+        /* Круглая кнопка Telegram */
+        .btn-tg {
+            background: var(--tg-blue);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 10px auto;
+            box-shadow: 0 5px 15px rgba(36, 161, 222, 0.4);
+        }
 
-        /* Элементы загрузки и FAQ */
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(50, 205, 50, 0.2); }
+        .btn-tg:hover { background: #2ca9e1; box-shadow: 0 8px 25px rgba(36, 161, 222, 0.6); }
+
+        /* Загрузка и FAQ */
         #loader {
             display: none;
             margin: 20px auto;
@@ -120,49 +141,53 @@
         }
 
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         #faq-container { display: none; margin-top: 30px; }
 
+        /* Уведомление */
         #toast {
             visibility: hidden;
             min-width: 250px;
             background: var(--lime-color);
             color: #000;
             text-align: center;
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 16px;
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            z-index: 1000;
+            z-index: 2000;
             font-weight: bold;
         }
 
         #toast.show { visibility: visible; animation: fadeInOut 2.5s; }
+        @keyframes fadeInOut { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }
 
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            20%, 80% { opacity: 1; }
-        }
     </style>
 </head>
 <body>
 
 <section class="hero-section">
-    <h1>LimeVPN</h1>
+    <h1>LIME VPN</h1>
     <p>Самый стабильный, бесплатный и безопасный VPN сервис, с обходом белых списков.</p>
 </section>
 
 <div class="content-wrapper">
     <div class="sticky-card">
-        <h3>Доступ к подписке</h3>
+        <h3>Подписка обновлена</h3>
         <div class="sub-url-box" id="subUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</div>
         
         <div class="btn-group">
             <button class="btn btn-primary" onclick="copySubscription()">Скопировать подписку</button>
             <button class="btn btn-secondary" id="faqBtn" onclick="loadFAQ()">Как использовать?</button>
         </div>
+
+        <p style="font-size: 0.9rem; color: #888; margin-bottom: 10px;">Присоединяйтесь к сообществу:</p>
+        <a href="https://t.me/LimeVPNFREE" class="btn btn-tg" title="Telegram Канал" target="_blank">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 9.38 15.17 14.88 14.5 17.61C14.4 18.04 14.23 18.18 14.07 18.2C13.73 18.23 13.47 17.98 13.14 17.76C12.63 17.42 12.34 17.21 11.85 16.89C11.28 16.51 11.65 16.3 11.97 15.96C12.06 15.87 13.52 14.54 13.55 14.41C13.55 14.4 13.55 14.34 13.52 14.31C13.48 14.28 13.44 14.29 13.41 14.3C13.36 14.31 12.63 14.8 11.22 15.75C11.01 15.89 10.82 15.96 10.65 15.96C10.46 15.96 10.08 15.85 9.8 15.76C9.46 15.65 9.18 15.59 9.21 15.4C9.22 15.3 9.37 15.2 9.65 15.09C11.39 14.33 12.55 13.83 13.13 13.58C14.78 12.89 15.12 12.77 15.35 12.77C15.4 12.77 15.51 12.78 15.58 12.84C15.64 12.89 15.66 12.96 15.66 13.01C15.66 13.07 15.65 13.18 15.64 13.29C15.64 13.29 15.64 13.29 15.64 13.29Z" fill="white"/>
+            </svg>
+        </a>
 
         <div id="loader"></div>
         <div id="faq-container">
@@ -206,7 +231,7 @@
             loader.style.display = "none";
             faq.style.display = "block";
             btn.innerText = "Скрыть инструкцию";
-        }, 1000);
+        }, 1100);
     }
 </script>
 
