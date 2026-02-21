@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIME VPN — Стабильность и Свобода</title>
+    <title>LIME VPN — Официальный ресурс</title>
     <style>
         :root {
             --lime-color: #32CD32;
@@ -21,7 +21,7 @@
             overflow-x: hidden;
         }
 
-        /* Hero Section с эффектом параллакса */
+        /* Hero Section с параллаксом */
         .hero-section {
             position: relative;
             height: 100vh;
@@ -39,11 +39,11 @@
         }
 
         .hero-section h1 {
-            font-size: 5rem;
+            font-size: clamp(3rem, 10vw, 5rem);
             color: var(--lime-color);
             margin: 0;
             text-transform: uppercase;
-            letter-spacing: 15px; /* Увеличенный межбуквенный интервал для LIME VPN */
+            letter-spacing: 15px;
             font-weight: 900;
         }
 
@@ -53,7 +53,6 @@
             margin-top: 30px;
             color: #f0f0f0;
             line-height: 1.6;
-            font-weight: 300;
         }
 
         /* Контентная часть */
@@ -86,7 +85,6 @@
             word-break: break-all;
             margin: 25px 0;
             border: 1px solid #222;
-            font-size: 0.9rem;
         }
 
         .btn-group {
@@ -94,10 +92,9 @@
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
-        /* Кнопки */
         .btn {
             padding: 18px 35px;
             border-radius: 50px;
@@ -113,20 +110,35 @@
 
         .btn-primary { background: var(--lime-color); color: #000; }
         .btn-secondary { background: transparent; color: var(--lime-color); border: 2px solid var(--lime-color); }
+        
+        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(50, 205, 50, 0.2); }
 
-        /* Круглая кнопка Telegram */
+        /* Идеально круглая кнопка Telegram */
         .btn-tg {
             background: var(--tg-blue);
             color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 10px auto;
-            box-shadow: 0 5px 15px rgba(36, 161, 222, 0.4);
+            width: 80px; 
+            height: 80px; 
+            border-radius: 50%; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            box-shadow: 0 10px 20px rgba(36, 161, 222, 0.3);
+            transition: all 0.3s ease;
+            padding: 0;
         }
 
-        .btn:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(50, 205, 50, 0.2); }
-        .btn-tg:hover { background: #2ca9e1; box-shadow: 0 8px 25px rgba(36, 161, 222, 0.6); }
+        .btn-tg svg {
+            width: 45px;
+            height: 45px;
+        }
+
+        .btn-tg:hover {
+            background: #2ca9e1;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 30px rgba(36, 161, 222, 0.5);
+        }
 
         /* Загрузка и FAQ */
         #loader {
@@ -174,7 +186,8 @@
 
 <div class="content-wrapper">
     <div class="sticky-card">
-        <h3>Подписка обновлена</h3>
+        <h2 style="margin: 0; font-size: 2.2rem; letter-spacing: 2px;">Начать:</h2>
+        
         <div class="sub-url-box" id="subUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</div>
         
         <div class="btn-group">
@@ -182,10 +195,10 @@
             <button class="btn btn-secondary" id="faqBtn" onclick="loadFAQ()">Как использовать?</button>
         </div>
 
-        <p style="font-size: 0.9rem; color: #888; margin-bottom: 10px;">Присоединяйтесь к сообществу:</p>
-        <a href="https://t.me/LimeVPNFREE" class="btn btn-tg" title="Telegram Канал" target="_blank">
-            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 9.38 15.17 14.88 14.5 17.61C14.4 18.04 14.23 18.18 14.07 18.2C13.73 18.23 13.47 17.98 13.14 17.76C12.63 17.42 12.34 17.21 11.85 16.89C11.28 16.51 11.65 16.3 11.97 15.96C12.06 15.87 13.52 14.54 13.55 14.41C13.55 14.4 13.55 14.34 13.52 14.31C13.48 14.28 13.44 14.29 13.41 14.3C13.36 14.31 12.63 14.8 11.22 15.75C11.01 15.89 10.82 15.96 10.65 15.96C10.46 15.96 10.08 15.85 9.8 15.76C9.46 15.65 9.18 15.59 9.21 15.4C9.22 15.3 9.37 15.2 9.65 15.09C11.39 14.33 12.55 13.83 13.13 13.58C14.78 12.89 15.12 12.77 15.35 12.77C15.4 12.77 15.51 12.78 15.58 12.84C15.64 12.89 15.66 12.96 15.66 13.01C15.66 13.07 15.65 13.18 15.64 13.29C15.64 13.29 15.64 13.29 15.64 13.29Z" fill="white"/>
+        <p style="font-size: 1rem; color: #888; margin-top: 20px;">Наше сообщество:</p>
+        <a href="https://t.me/LimeVPNFREE" class="btn-tg" title="Telegram Канал" target="_blank">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 9.38 15.17 14.88 14.5 17.61C14.4 18.04 14.23 18.18 14.07 18.2C13.73 18.23 13.47 17.98 13.14 17.76C12.63 17.42 12.34 17.21 11.85 16.89C11.28 16.51 11.65 16.3 11.97 15.96C12.06 15.87 13.52 14.54 13.55 14.41C13.55 14.4 13.55 14.34 13.52 14.31C13.48 14.28 13.44 14.29 13.41 14.3C13.36 14.31 12.63 14.8 11.22 15.75C11.01 15.89 10.82 15.96 10.65 15.96C10.46 15.96 10.08 15.85 9.8 15.76C9.46 15.65 9.18 15.59 9.21 15.4C9.22 15.3 9.37 15.2 9.65 15.09C11.39 14.33 12.55 13.83 13.13 13.58C14.78 12.89 15.12 12.77 15.35 12.77C15.4 12.77 15.51 12.78 15.58 12.84C15.64 12.89 15.66 12.96 15.66 13.01C15.66 13.07 15.65 13.18 15.64 13.29Z" fill="white"/>
             </svg>
         </a>
 
@@ -201,7 +214,7 @@
     </div>
 </div>
 
-<div id="toast">Ссылка скопирована!</div>
+<div id="toast">Ссылка успешно скопирована!</div>
 
 <script>
     function copySubscription() {
