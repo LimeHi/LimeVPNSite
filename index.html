@@ -98,41 +98,8 @@
 
         .btn-primary { background: var(--lime-color); color: #000; }
         .btn-secondary { background: transparent; color: var(--lime-color); border: 2px solid var(--lime-color); }
-        .btn-monitor { background: #333; color: white; border: 1px solid #444; }
 
         .btn:hover { transform: translateY(-5px); filter: brightness(1.1); }
-
-        /* Секция списка серверов */
-        #monitor-section {
-            display: none;
-            margin-top: 30px;
-            text-align: left;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .server-list-box {
-            background: #000;
-            border-radius: 15px;
-            padding: 10px;
-            border: 1px solid #222;
-        }
-
-        .server-item {
-            padding: 15px;
-            border-bottom: 1px solid #222;
-            display: flex;
-            align-items: center;
-            color: #eee;
-        }
-
-        .server-item:last-child { border-bottom: none; }
-
-        .server-item::before {
-            content: "●";
-            color: var(--lime-color);
-            margin-right: 15px;
-            font-size: 1.2rem;
-        }
 
         /* TG Кнопка */
         .btn-tg-main {
@@ -144,6 +111,7 @@
             justify-content: center;
             transition: 0.3s;
             margin-top: 15px;
+            text-decoration: none;
         }
         .btn-tg-white-circle {
             background: white;
@@ -154,8 +122,6 @@
         }
         .btn-tg-white-circle img { width: 100%; height: 100%; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         #toast {
             visibility: hidden; min-width: 250px; background: var(--lime-color); color: #000;
             text-align: center; border-radius: 12px; padding: 16px; position: fixed;
@@ -163,13 +129,14 @@
         }
         #toast.show { visibility: visible; animation: fadeInOut 2.5s; }
         @keyframes fadeInOut { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }
+
     </style>
 </head>
 <body>
 
 <section class="hero-section">
     <h1>LIME VPN</h1>
-    <p>Просмотр доступных узлов в реальном времени.</p>
+    <p>Самый стабильный, бесплатный и безопасный VPN сервис.</p>
 </section>
 
 <div class="content-wrapper">
@@ -180,15 +147,7 @@
         
         <div class="btn-group">
             <button class="btn btn-primary" onclick="copySubscription()">Скопировать подписку</button>
-            <button class="btn btn-monitor" onclick="toggleMonitor()">Список локаций</button>
-            <button class="btn btn-secondary" id="faqBtn" onclick="loadFAQ()">Инструкция</button>
-        </div>
-
-        <div id="monitor-section">
-            <h3 style="color: var(--lime-color); margin-bottom: 15px;">Доступные серверы:</h3>
-            <div class="server-list-box" id="server-list">
-                <div style="text-align:center; padding: 20px;">Загрузка списка...</div>
-            </div>
+            <button class="btn btn-secondary" onclick="loadFAQ()">Инструкция</button>
         </div>
 
         <div style="margin-top: 30px;">
@@ -213,47 +172,6 @@
             toast.className = "show";
             setTimeout(() => { toast.className = ""; }, 2500);
         });
-    }
-
-    async function toggleMonitor() {
-        const section = document.getElementById('monitor-section');
-        if (section.style.display === "block") {
-            section.style.display = "none";
-        } else {
-            section.style.display = "block";
-            await fetchServers();
-        }
-    }
-
-    async function fetchServers() {
-        const listContainer = document.getElementById('server-list');
-        try {
-            // Используем прокси для обхода CORS
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(SUB_URL)}`;
-            const response = await fetch(proxyUrl);
-            const data = await response.json();
-            
-            // Содержимое файла находится в data.contents (подписка в base64)
-            const decoded = atob(data.contents);
-            const lines = decoded.split('\n').filter(line => line.includes('#'));
-            
-            if (lines.length === 0) {
-                listContainer.innerHTML = '<div style="text-align:center; padding: 20px;">Серверы не найдены</div>';
-                return;
-            }
-
-            listContainer.innerHTML = '';
-            lines.forEach(line => {
-                const serverName = decodeURIComponent(line.split('#')[1]) || "Безымянный узел";
-                const div = document.createElement('div');
-                div.className = 'server-item';
-                div.innerText = serverName;
-                listContainer.appendChild(div);
-            });
-
-        } catch (e) {
-            listContainer.innerHTML = '<div style="text-align:center; padding: 20px; color:red;">Ошибка загрузки списка серверов</div>';
-        }
     }
 
     function loadFAQ() {
