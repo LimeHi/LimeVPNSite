@@ -16,203 +16,139 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
             background-color: var(--dark-bg);
             color: var(--text-light);
-            overflow-x: hidden;
-        }
-
-        .hero-section {
-            position: relative;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8)), 
-                        url('https://raw.githubusercontent.com/LimeHi/LimeVPNSite/main/ChatGPT%20Image%2024%20%D1%8F%D0%BD%D0%B2.%202026%20%D0%B3.%2C%2012_45_30.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            padding: 0 10%;
-        }
-
-        .hero-section h1 {
-            font-size: clamp(3.5rem, 12vw, 6rem);
-            color: var(--lime-color);
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 20px;
-            font-weight: 900;
-        }
-
-        .content-wrapper {
-            position: relative;
-            z-index: 10;
-            background: var(--dark-bg);
-            padding-bottom: 120px;
         }
 
         .sticky-card {
-            position: sticky;
-            top: 40px;
             max-width: 800px;
-            margin: -100px auto 0;
+            margin: 50px auto;
             background: var(--card-bg);
-            padding: 50px;
+            padding: 40px;
             border-radius: 40px;
             border: 1px solid #333;
             text-align: center;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.9);
-        }
-
-        .sub-url-box {
-            background: #000;
-            padding: 20px;
-            border-radius: 18px;
-            font-family: 'Consolas', monospace;
-            color: var(--lime-color);
-            word-break: break-all;
-            margin: 30px 0;
-            border: 1px solid #222;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
 
         .btn-group {
             display: flex;
             justify-content: center;
             gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .btn {
-            padding: 18px 30px;
+            padding: 15px 25px;
             border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
             border: none;
-            text-decoration: none;
-            font-size: 0.95rem;
+            transition: 0.3s;
         }
 
         .btn-primary { background: var(--lime-color); color: #000; }
-        .btn-secondary { background: transparent; color: var(--lime-color); border: 2px solid var(--lime-color); }
         .btn-monitor { background: #333; color: white; border: 1px solid #444; }
 
-        .btn:hover { transform: translateY(-5px); filter: brightness(1.1); }
-
-        /* Таблица мониторинга */
-        #monitor-section {
-            display: none;
-            margin-top: 30px;
-            text-align: left;
-            animation: fadeIn 0.5s ease;
+        /* ИСПРАВЛЕННАЯ КНОПКА TELEGRAM (БЕЗ СМЕНЫ ИКОНКИ) */
+        .tg-container {
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
+        .btn-tg-circle {
+            background: var(--tg-blue);
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .white-inner {
+            background: white;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Гарантирует, что иконка не вылезет */
+        }
+
+        .white-inner svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--tg-blue);
+            margin-right: 2px; /* Центровка */
+        }
+
+        .btn-tg-circle:hover { transform: scale(1.1); }
+
+        /* ТАБЛИЦА МОНИТОРИНГА */
+        #monitor-section { display: none; margin-top: 30px; text-align: left; }
         .server-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             background: #000;
             border-radius: 15px;
             overflow: hidden;
         }
-
-        .server-table th, .server-table td {
-            padding: 15px;
-            border-bottom: 1px solid #222;
-        }
-
-        .server-table th { background: #111; color: var(--lime-color); font-size: 0.8rem; text-transform: uppercase; }
-
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-
-        .online { background: rgba(0, 255, 0, 0.1); color: var(--status-ok); }
-        .offline { background: rgba(255, 0, 0, 0.1); color: var(--status-err); }
-
-        /* TG Кнопка */
-        .btn-tg-main {
-            background: var(--tg-blue);
-            width: 80px; height: 80px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.3s;
-            margin-top: 15px;
-        }
-        .btn-tg-white-circle {
-            background: white;
-            width: 55px; height: 55px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center; justify-content: center;
-        }
-        .btn-tg-white-circle img { width: 100%; height: 100%; }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .server-table th, .server-table td { padding: 15px; border-bottom: 1px solid #222; }
+        .server-table th { color: var(--lime-color); font-size: 0.8rem; text-transform: uppercase; }
+        .status-badge { padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
+        .online { color: var(--status-ok); background: rgba(0,255,0,0.1); }
+        .offline { color: var(--status-err); background: rgba(255,0,0,0.1); }
 
         #toast {
-            visibility: hidden; min-width: 250px; background: var(--lime-color); color: #000;
-            text-align: center; border-radius: 12px; padding: 16px; position: fixed;
-            bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 2000; font-weight: bold;
+            visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: var(--lime-color); color: #000; padding: 15px 30px; border-radius: 10px; font-weight: bold;
         }
         #toast.show { visibility: visible; animation: fadeInOut 2.5s; }
         @keyframes fadeInOut { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }
-
     </style>
 </head>
 <body>
 
-<section class="hero-section">
-    <h1>LIME VPN</h1>
-    <p>Проверка статуса узлов в реальном времени.</p>
-</section>
+<div class="sticky-card">
+    <h2 style="font-size: 2.2rem;">Начать:</h2>
+    
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="copySub()">Скопировать подписку</button>
+        <button class="btn btn-monitor" onclick="toggleMonitor()">Мониторинг серверов</button>
+    </div>
 
-<div class="content-wrapper">
-    <div class="sticky-card">
-        <h2 style="margin: 0; font-size: 2.2rem; letter-spacing: 2px;">Начать:</h2>
-        
-        <div class="sub-url-box" id="subUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</div>
-        
-        <div class="btn-group">
-            <button class="btn btn-primary" onclick="copySubscription()">Скопировать подписку</button>
-            <button class="btn btn-monitor" onclick="toggleMonitor()">Мониторинг серверов</button>
-            <button class="btn btn-secondary" id="faqBtn" onclick="loadFAQ()">Инструкция</button>
-        </div>
+    <div id="monitor-section">
+        <h3 style="color: var(--lime-color);">Статус серверов:</h3>
+        <table class="server-table">
+            <thead>
+                <tr>
+                    <th>СЕРВЕР</th>
+                    <th>СТАТУС</th>
+                    <th>PING</th>
+                </tr>
+            </thead>
+            <tbody id="server-list">
+                <tr><td colspan="3" style="text-align:center;">Загрузка данных через прокси...</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-        <div id="monitor-section">
-            <h3 style="color: var(--lime-color);">Статус серверов:</h3>
-            <table class="server-table">
-                <thead>
-                    <tr>
-                        <th>Сервер</th>
-                        <th>Статус</th>
-                        <th>Ping</th>
-                    </tr>
-                </thead>
-                <tbody id="server-list">
-                    <tr><td colspan="3" style="text-align:center;">Загрузка данных...</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div style="margin-top: 30px;">
-            <span style="color: #888; font-weight: 500; display: block; margin-bottom: 10px;">Наши соц-сети:</span>
-            <a href="https://t.me/LimeVPNFREE" class="btn-tg-main" target="_blank">
-                <div class="btn-tg-white-circle">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG">
-                </div>
-            </a>
-        </div>
+    <div class="tg-container">
+        <span style="color: #888;">Наши соц-сети:</span>
+        <a href="https://t.me/LimeVPNFREE" class="btn-tg-circle" target="_blank">
+            <div class="white-inner">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 9.38 15.17 14.88 14.5 17.61C14.4 18.04 14.23 18.18 14.07 18.2C13.73 18.23 13.47 17.98 13.14 17.76C12.63 17.42 12.34 17.21 11.85 16.89C11.28 16.51 11.65 16.3 11.97 15.96C12.06 15.87 13.52 14.54 13.55 14.41C13.55 14.4 13.55 14.34 13.52 14.31C13.48 14.28 13.44 14.29 13.41 14.3C13.36 14.31 12.63 14.8 11.22 15.75C11.01 15.89 10.82 15.96 10.65 15.96C10.46 15.96 10.08 15.85 9.8 15.76C9.46 15.65 9.18 15.59 9.21 15.4C9.22 15.3 9.37 15.2 9.65 15.09C11.39 14.33 12.55 13.83 13.13 13.58C14.78 12.89 15.12 12.77 15.35 12.77C15.4 12.77 15.51 12.78 15.58 12.84C15.64 12.89 15.66 12.96 15.66 13.01C15.66 13.07 15.65 13.18 15.64 13.29Z" /></svg>
+            </div>
+        </a>
     </div>
 </div>
 
@@ -220,86 +156,59 @@
 
 <script>
     const SUB_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
-    const PING_URL = "https://www.gstatic.com/generate_204";
 
-    function copySubscription() {
-        navigator.clipboard.writeText(SUB_URL).then(() => {
-            const toast = document.getElementById("toast");
-            toast.className = "show";
-            setTimeout(() => { toast.className = ""; }, 2500);
-        });
+    function copySub() {
+        navigator.clipboard.writeText(SUB_URL);
+        const t = document.getElementById("toast");
+        t.className = "show";
+        setTimeout(() => t.className = "", 2500);
     }
 
     async function toggleMonitor() {
-        const section = document.getElementById('monitor-section');
-        if (section.style.display === "block") {
-            section.style.display = "none";
-        } else {
-            section.style.display = "block";
-            await runMonitoring();
-        }
+        const sec = document.getElementById('monitor-section');
+        sec.style.display = (sec.style.display === "block") ? "none" : "block";
+        if (sec.style.display === "block") await startMonitoring();
     }
 
-    async function runMonitoring() {
+    async function startMonitoring() {
         const list = document.getElementById('server-list');
-        list.innerHTML = '<tr><td colspan="3" style="text-align:center;">Опрашиваем подписку...</td></tr>';
-
+        list.innerHTML = '<tr><td colspan="3" style="text-align:center;">Загрузка данных...</td></tr>';
+        
         try {
-            const response = await fetch(SUB_URL);
-            const text = await response.text();
+            // ОБХОД CORS через прокси allorigins
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(SUB_URL)}`;
+            const res = await fetch(proxyUrl);
+            const data = await res.json();
             
-            // Декодируем base64 подписку и ищем названия серверов
-            const decoded = atob(text);
-            const lines = decoded.split('\n').filter(line => line.includes('#'));
+            // Подписка обычно в Base64
+            const decoded = atob(data.contents);
+            const lines = decoded.split('\n').filter(l => l.includes('#'));
             
-            if (lines.length === 0) {
-                list.innerHTML = '<tr><td colspan="3" style="text-align:center;">Серверы не найдены</td></tr>';
-                return;
-            }
-
             list.innerHTML = '';
-
-            for (let line of lines) {
-                const serverName = decodeURIComponent(line.split('#')[1]) || "Безымянный узел";
+            for (let l of lines) {
+                const name = decodeURIComponent(l.split('#')[1]) || "Node";
                 const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${serverName}</td>
-                    <td><span class="status-badge" id="status-${serverName}">Проверка...</span></td>
-                    <td id="ping-${serverName}">--</td>
-                `;
+                row.innerHTML = `<td>${name}</td><td><span id="s-${name}" class="status-badge">...</span></td><td id="p-${name}">--</td>`;
                 list.appendChild(row);
-
-                // Тест задержки
-                checkServer(serverName);
+                pingServer(name);
             }
         } catch (e) {
-            list.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Ошибка загрузки данных</td></tr>';
+            list.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Ошибка CORS или формата данных</td></tr>';
         }
     }
 
-    async function checkServer(name) {
-        const statusEl = document.getElementById(`status-${name}`);
-        const pingEl = document.getElementById(`ping-${name}`);
+    async function pingServer(name) {
+        const s = document.getElementById(`s-${name}`);
+        const p = document.getElementById(`p-${name}`);
         const start = Date.now();
-
         try {
-            // Используем fetch с no-cors для проверки доступности gstatic через текущее соединение
-            await fetch(PING_URL, { mode: 'no-cors', cache: 'no-cache' });
-            const duration = Date.now() - start;
-            
-            statusEl.innerText = "ONLINE";
-            statusEl.className = "status-badge online";
-            pingEl.innerText = duration + " ms";
-        } catch (e) {
-            statusEl.innerText = "OFFLINE";
-            statusEl.className = "status-badge offline";
-            pingEl.innerText = "timeout";
+            await fetch("https://www.gstatic.com/generate_204", { mode: 'no-cors', cache: 'no-cache' });
+            const lat = Date.now() - start;
+            s.innerText = "ONLINE"; s.className = "status-badge online";
+            p.innerText = lat + " ms";
+        } catch {
+            s.innerText = "OFFLINE"; s.className = "status-badge offline";
         }
-    }
-
-    function loadFAQ() {
-        alert("Скопируйте ссылку подписки и вставьте её в ваше приложение (V2Ray/Shadowsocks).");
     }
 </script>
 
