@@ -11,8 +11,6 @@
             --card-bg: #161616;
             --text-light: #ffffff;
             --tg-blue: #24A1DE;
-            --status-ok: #00FF00;
-            --status-err: #FF4444;
         }
 
         body {
@@ -104,7 +102,7 @@
 
         .btn:hover { transform: translateY(-5px); filter: brightness(1.1); }
 
-        /* Таблица мониторинга */
+        /* Секция списка серверов */
         #monitor-section {
             display: none;
             margin-top: 30px;
@@ -112,31 +110,29 @@
             animation: fadeIn 0.5s ease;
         }
 
-        .server-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .server-list-box {
             background: #000;
             border-radius: 15px;
-            overflow: hidden;
+            padding: 10px;
+            border: 1px solid #222;
         }
 
-        .server-table th, .server-table td {
+        .server-item {
             padding: 15px;
             border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            color: #eee;
         }
 
-        .server-table th { background: #111; color: var(--lime-color); font-size: 0.8rem; text-transform: uppercase; }
+        .server-item:last-child { border-bottom: none; }
 
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 0.8rem;
-            font-weight: bold;
+        .server-item::before {
+            content: "●";
+            color: var(--lime-color);
+            margin-right: 15px;
+            font-size: 1.2rem;
         }
-
-        .online { background: rgba(0, 255, 0, 0.1); color: var(--status-ok); }
-        .offline { background: rgba(255, 0, 0, 0.1); color: var(--status-err); }
 
         /* TG Кнопка */
         .btn-tg-main {
@@ -167,14 +163,13 @@
         }
         #toast.show { visibility: visible; animation: fadeInOut 2.5s; }
         @keyframes fadeInOut { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }
-
     </style>
 </head>
 <body>
 
 <section class="hero-section">
     <h1>LIME VPN</h1>
-    <p>Проверка статуса узлов в реальном времени.</p>
+    <p>Просмотр доступных узлов в реальном времени.</p>
 </section>
 
 <div class="content-wrapper">
@@ -185,24 +180,15 @@
         
         <div class="btn-group">
             <button class="btn btn-primary" onclick="copySubscription()">Скопировать подписку</button>
-            <button class="btn btn-monitor" onclick="toggleMonitor()">Мониторинг серверов</button>
+            <button class="btn btn-monitor" onclick="toggleMonitor()">Список локаций</button>
             <button class="btn btn-secondary" id="faqBtn" onclick="loadFAQ()">Инструкция</button>
         </div>
 
         <div id="monitor-section">
-            <h3 style="color: var(--lime-color);">Статус серверов:</h3>
-            <table class="server-table">
-                <thead>
-                    <tr>
-                        <th>Сервер</th>
-                        <th>Статус</th>
-                        <th>Ping</th>
-                    </tr>
-                </thead>
-                <tbody id="server-list">
-                    <tr><td colspan="3" style="text-align:center;">Загрузка данных...</td></tr>
-                </tbody>
-            </table>
+            <h3 style="color: var(--lime-color); margin-bottom: 15px;">Доступные серверы:</h3>
+            <div class="server-list-box" id="server-list">
+                <div style="text-align:center; padding: 20px;">Загрузка списка...</div>
+            </div>
         </div>
 
         <div style="margin-top: 30px;">
@@ -220,7 +206,6 @@
 
 <script>
     const SUB_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
-    const PING_URL = "https://www.gstatic.com/generate_204";
 
     function copySubscription() {
         navigator.clipboard.writeText(SUB_URL).then(() => {
@@ -236,70 +221,43 @@
             section.style.display = "none";
         } else {
             section.style.display = "block";
-            await runMonitoring();
+            await fetchServers();
         }
     }
 
-    async function runMonitoring() {
-        const list = document.getElementById('server-list');
-        list.innerHTML = '<tr><td colspan="3" style="text-align:center;">Опрашиваем подписку...</td></tr>';
-
+    async function fetchServers() {
+        const listContainer = document.getElementById('server-list');
         try {
-            const response = await fetch(SUB_URL);
-            const text = await response.text();
+            // Используем прокси для обхода CORS
+            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(SUB_URL)}`;
+            const response = await fetch(proxyUrl);
+            const data = await response.json();
             
-            // Декодируем base64 подписку и ищем названия серверов
-            const decoded = atob(text);
+            // Содержимое файла находится в data.contents (подписка в base64)
+            const decoded = atob(data.contents);
             const lines = decoded.split('\n').filter(line => line.includes('#'));
             
             if (lines.length === 0) {
-                list.innerHTML = '<tr><td colspan="3" style="text-align:center;">Серверы не найдены</td></tr>';
+                listContainer.innerHTML = '<div style="text-align:center; padding: 20px;">Серверы не найдены</div>';
                 return;
             }
 
-            list.innerHTML = '';
-
-            for (let line of lines) {
+            listContainer.innerHTML = '';
+            lines.forEach(line => {
                 const serverName = decodeURIComponent(line.split('#')[1]) || "Безымянный узел";
-                const row = document.createElement('tr');
-                
-                row.innerHTML = `
-                    <td>${serverName}</td>
-                    <td><span class="status-badge" id="status-${serverName}">Проверка...</span></td>
-                    <td id="ping-${serverName}">--</td>
-                `;
-                list.appendChild(row);
+                const div = document.createElement('div');
+                div.className = 'server-item';
+                div.innerText = serverName;
+                listContainer.appendChild(div);
+            });
 
-                // Тест задержки
-                checkServer(serverName);
-            }
         } catch (e) {
-            list.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Ошибка загрузки данных</td></tr>';
-        }
-    }
-
-    async function checkServer(name) {
-        const statusEl = document.getElementById(`status-${name}`);
-        const pingEl = document.getElementById(`ping-${name}`);
-        const start = Date.now();
-
-        try {
-            // Используем fetch с no-cors для проверки доступности gstatic через текущее соединение
-            await fetch(PING_URL, { mode: 'no-cors', cache: 'no-cache' });
-            const duration = Date.now() - start;
-            
-            statusEl.innerText = "ONLINE";
-            statusEl.className = "status-badge online";
-            pingEl.innerText = duration + " ms";
-        } catch (e) {
-            statusEl.innerText = "OFFLINE";
-            statusEl.className = "status-badge offline";
-            pingEl.innerText = "timeout";
+            listContainer.innerHTML = '<div style="text-align:center; padding: 20px; color:red;">Ошибка загрузки списка серверов</div>';
         }
     }
 
     function loadFAQ() {
-        alert("Скопируйте ссылку подписки и вставьте её в ваше приложение (V2Ray/Shadowsocks).");
+        alert("Скопируйте ссылку подписки и вставьте её в ваше приложение (V2Ray/Shadowsocks/Nekobox).");
     }
 </script>
 
