@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIME VPN — Официальный сайт</title>
+    <title>LIME VPN — Официальный ресурс</title>
     <style>
         :root {
             --lime-color: #32CD32;
@@ -21,7 +21,6 @@
             overflow-x: hidden;
         }
 
-        /* Hero Section с параллаксом */
         .hero-section {
             position: relative;
             height: 100vh;
@@ -45,18 +44,8 @@
             text-transform: uppercase;
             letter-spacing: 20px;
             font-weight: 900;
-            text-shadow: 0 10px 30px rgba(50, 205, 50, 0.3);
         }
 
-        .hero-section p {
-            font-size: 1.4rem;
-            max-width: 800px;
-            margin-top: 30px;
-            color: #f0f0f0;
-            line-height: 1.6;
-        }
-
-        /* Контентная часть */
         .content-wrapper {
             position: relative;
             z-index: 10;
@@ -86,8 +75,6 @@
             word-break: break-all;
             margin: 30px 0;
             border: 1px solid #222;
-            font-size: 0.95rem;
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .btn-group {
@@ -99,22 +86,19 @@
         }
 
         .btn {
-            padding: 20px 40px;
-            border-radius: 60px;
+            padding: 18px 35px;
+            border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             border: none;
             text-decoration: none;
-            font-size: 1.1rem;
         }
 
         .btn-primary { background: var(--lime-color); color: #000; }
         .btn-secondary { background: transparent; color: var(--lime-color); border: 2px solid var(--lime-color); }
-        
-        .btn:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(50, 205, 50, 0.25); }
 
-        /* Профессиональная кнопка Telegram */
+        /* ИСПРАВЛЕННАЯ КНОПКА TELEGRAM */
         .tg-container {
             margin-top: 20px;
             display: flex;
@@ -123,53 +107,58 @@
             gap: 15px;
         }
 
-        .btn-tg-circle {
+        .btn-tg-main {
             background: var(--tg-blue);
-            width: 90px;
-            height: 90px;
+            width: 85px;
+            height: 85px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 10px 25px rgba(36, 161, 222, 0.4);
-            transition: all 0.4s ease;
+            box-shadow: 0 8px 25px rgba(36, 161, 222, 0.4);
+            transition: all 0.3s ease;
             text-decoration: none;
         }
 
-        .btn-tg-circle svg {
-            width: 50px;
-            height: 50px;
-            fill: white;
-            /* Смещение для визуального баланса */
-            margin-left: -5px; 
-            margin-top: 2px;
+        .btn-tg-white-circle {
+            background: white;
+            width: 55px; /* Размер белого круга */
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Чтобы иконка не вылазила */
         }
 
-        .btn-tg-circle:hover {
-            transform: scale(1.15) rotate(5deg);
-            background: #2ca9e1;
-            box-shadow: 0 15px 35px rgba(36, 161, 222, 0.6);
+        .btn-tg-white-circle svg {
+            width: 32px; /* Размер самой иконки самолетика */
+            height: 32px;
+            fill: var(--tg-blue);
+            margin-right: 3px; /* Оптическое выравнивание */
         }
 
-        /* Загрузка и прочее */
-        #faq-container { display: none; margin-top: 40px; animation: slideUp 0.6s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-tg-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(36, 161, 222, 0.6);
+        }
+
+        #faq-container { display: none; margin-top: 40px; }
 
         #toast {
             visibility: hidden;
-            min-width: 280px;
+            min-width: 250px;
             background: var(--lime-color);
             color: #000;
             text-align: center;
-            border-radius: 15px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 16px;
             position: fixed;
-            bottom: 40px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 2000;
             font-weight: bold;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
         }
 
         #toast.show { visibility: visible; animation: fadeInOut 2.5s; }
@@ -186,7 +175,7 @@
 
 <div class="content-wrapper">
     <div class="sticky-card">
-        <h2 style="margin: 0; font-size: 2.5rem; letter-spacing: 1px;">Начать:</h2>
+        <h2 style="margin: 0; font-size: 2.2rem; letter-spacing: 2px;">Начать:</h2>
         
         <div class="sub-url-box" id="subUrl">https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt</div>
         
@@ -196,11 +185,13 @@
         </div>
 
         <div class="tg-container">
-            <span style="color: #888; font-weight: 500;">Присоединиться к сообществу:</span>
-            <a href="https://t.me/LimeVPNFREE" class="btn-tg-circle" target="_blank">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 9.38 15.17 14.88 14.5 17.61C14.4 18.04 14.23 18.18 14.07 18.2C13.73 18.23 13.47 17.98 13.14 17.76C12.63 17.42 12.34 17.21 11.85 16.89C11.28 16.51 11.65 16.3 11.97 15.96C12.06 15.87 13.52 14.54 13.55 14.41C13.55 14.4 13.55 14.34 13.52 14.31C13.48 14.28 13.44 14.29 13.41 14.3C13.36 14.31 12.63 14.8 11.22 15.75C11.01 15.89 10.82 15.96 10.65 15.96C10.46 15.96 10.08 15.85 9.8 15.76C9.46 15.65 9.18 15.59 9.21 15.4C9.22 15.3 9.37 15.2 9.65 15.09C11.39 14.33 12.55 13.83 13.13 13.58C14.78 12.89 15.12 12.77 15.35 12.77C15.4 12.77 15.51 12.78 15.58 12.84C15.64 12.89 15.66 12.96 15.66 13.01C15.66 13.07 15.65 13.18 15.64 13.29Z" />
-                </svg>
+            <span style="color: #888; font-weight: 500;">Наши соц-сети:</span>
+            <a href="https://t.me/LimeVPNFREE" class="btn-tg-main" target="_blank">
+                <div class="btn-tg-white-circle">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 9.38 15.17 14.88 14.5 17.61C14.4 18.04 14.23 18.18 14.07 18.2C13.73 18.23 13.47 17.98 13.14 17.76C12.63 17.42 12.34 17.21 11.85 16.89C11.28 16.51 11.65 16.3 11.97 15.96C12.06 15.87 13.52 14.54 13.55 14.41C13.55 14.4 13.55 14.34 13.52 14.31C13.48 14.28 13.44 14.29 13.41 14.3C13.36 14.31 12.63 14.8 11.22 15.75C11.01 15.89 10.82 15.96 10.65 15.96C10.46 15.96 10.08 15.85 9.8 15.76C9.46 15.65 9.18 15.59 9.21 15.4C9.22 15.3 9.37 15.2 9.65 15.09C11.39 14.33 12.55 13.83 13.13 13.58C14.78 12.89 15.12 12.77 15.35 12.77C15.4 12.77 15.51 12.78 15.58 12.84C15.64 12.89 15.66 12.96 15.66 13.01C15.66 13.07 15.65 13.18 15.64 13.29Z" />
+                    </svg>
+                </div>
             </a>
         </div>
 
@@ -215,7 +206,7 @@
     </div>
 </div>
 
-<div id="toast">Подписка успешно скопирована!</div>
+<div id="toast">Ссылка скопирована!</div>
 
 <script>
     function copySubscription() {
@@ -236,7 +227,6 @@
         } else {
             faq.style.display = "block";
             btn.innerText = "Скрыть инструкцию";
-            faq.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 </script>
