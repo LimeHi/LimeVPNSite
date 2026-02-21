@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIME VPN — Официальный ресурс</title>
+    <title>LIME VPN — Мониторинг</title>
     <style>
         :root {
             --lime-color: #32CD32;
@@ -11,6 +11,8 @@
             --card-bg: #161616;
             --text-light: #ffffff;
             --tg-blue: #24A1DE;
+            --status-ok: #00FF00;
+            --status-err: #FF4444;
         }
 
         body {
@@ -25,10 +27,9 @@
             margin: 50px auto;
             background: var(--card-bg);
             padding: 40px;
-            border-radius: 40px;
+            border-radius: 30px;
             border: 1px solid #333;
             text-align: center;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
         }
 
         .btn-group {
@@ -48,148 +49,68 @@
         }
 
         .btn-primary { background: var(--lime-color); color: #000; }
-        .btn-monitor { background: #333; color: white; border: 1px solid #444; }
+        .btn-monitor { background: #333; color: white; }
 
-        /* Иконка Telegram без изменений */
-        .tg-container {
-            margin-top: 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-tg-circle {
-            background: var(--tg-blue);
-            width: 85px;
-            height: 85px;
-            border-radius: 50%;
-            display: flex;
+        /* ИСПРАВЛЕННАЯ КНОПКА TELEGRAM */
+        .tg-link {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 80px;
+            height: 80px;
+            background-color: var(--tg-blue);
+            border-radius: 50%;
             text-decoration: none;
-            transition: 0.3s;
+            transition: transform 0.3s;
         }
 
-        .white-inner {
-            background: white;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
+        .tg-white-circle {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
         }
 
-        .white-inner svg {
-            width: 32px;
-            height: 32px;
+        .tg-white-circle svg {
+            width: 30px;
+            height: 30px;
             fill: var(--tg-blue);
+            /* Оптическая коррекция центра самолетика */
             margin-right: 2px;
+            margin-top: 1px;
         }
 
-        .btn-tg-circle:hover { transform: scale(1.1); }
+        .tg-link:hover { transform: scale(1.1); }
 
-        /* Список серверов */
-        #monitor-section { display: none; margin-top: 30px; text-align: left; }
-        .server-list-container {
+        /* Таблица */
+        #monitor-section { margin-top: 20px; text-align: left; }
+        .server-table {
+            width: 100%;
+            border-collapse: collapse;
             background: #000;
             border-radius: 15px;
-            padding: 10px;
-            border: 1px solid #222;
+            overflow: hidden;
         }
-        .server-item {
-            padding: 12px 20px;
-            border-bottom: 1px solid #222;
-            display: flex;
-            align-items: center;
-            color: #ccc;
-        }
-        .server-item:last-child { border-bottom: none; }
-        .server-item::before {
-            content: "●";
-            color: var(--lime-color);
-            margin-right: 15px;
-            font-size: 1.2rem;
-        }
+        .server-table th, .server-table td { padding: 15px; border-bottom: 1px solid #222; }
+        .server-table th { color: var(--lime-color); font-size: 0.8rem; }
+        .status-badge { padding: 4px 8px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; }
+        .online { color: var(--status-ok); background: rgba(0,255,0,0.1); }
+        .offline { color: var(--status-err); background: rgba(255,0,0,0.1); }
 
-        #toast {
-            visibility: hidden; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            background: var(--lime-color); color: #000; padding: 15px 30px; border-radius: 10px; font-weight: bold;
-        }
-        #toast.show { visibility: visible; animation: fadeInOut 2.5s; }
-        @keyframes fadeInOut { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="sticky-card">
-    <h2 style="font-size: 2.2rem;">Начать:</h2>
+    <h2 style="margin-bottom: 30px;">Начать:</h2>
     
     <div class="btn-group">
-        <button class="btn btn-primary" onclick="copySub()">Скопировать подписку</button>
-        <button class="btn btn-monitor" onclick="toggleMonitor()">Список серверов</button>
+        <button class="btn btn-primary" onclick="copySub()">Копировать подписку</button>
+        <button class="btn btn-monitor" onclick="runMonitoring()">Обновить мониторинг</button>
     </div>
 
     <div id="monitor-section">
-        <h3 style="color: var(--lime-color);">Доступные локации:</h3>
-        <div class="server-list-container" id="server-list">
-            <div style="text-align:center; padding: 20px;">Загрузка списка...</div>
-        </div>
-    </div>
-
-    <div class="tg-container">
-        <span style="color: #888;">Наши соц-сети:</span>
-        <a href="https://t.me/LimeVPNFREE" class="btn-tg-circle" target="_blank">
-            <div class="white-inner">
-                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 9.38 15.17 14.88 14.5 17.61C14.4 18.04 14.23 18.18 14.07 18.2C13.73 18.23 13.47 17.98 13.14 17.76C12.63 17.42 12.34 17.21 11.85 16.89C11.28 16.51 11.65 16.3 11.97 15.96C12.06 15.87 13.52 14.54 13.55 14.41C13.55 14.4 13.55 14.34 13.52 14.31C13.48 14.28 13.44 14.29 13.41 14.3C13.36 14.31 12.63 14.8 11.22 15.75C11.01 15.89 10.82 15.96 10.65 15.96C10.46 15.96 10.08 15.85 9.8 15.76C9.46 15.65 9.18 15.59 9.21 15.4C9.22 15.3 9.37 15.2 9.65 15.09C11.39 14.33 12.55 13.83 13.13 13.58C14.78 12.89 15.12 12.77 15.35 12.77C15.4 12.77 15.51 12.78 15.58 12.84C15.64 12.89 15.66 12.96 15.66 13.01C15.66 13.07 15.65 13.18 15.64 13.29Z" /></svg>
-            </div>
-        </a>
-    </div>
-</div>
-
-<div id="toast">Ссылка скопирована!</div>
-
-<script>
-    const SUB_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
-
-    function copySub() {
-        navigator.clipboard.writeText(SUB_URL);
-        const t = document.getElementById("toast");
-        t.className = "show";
-        setTimeout(() => t.className = "", 2500);
-    }
-
-    async function toggleMonitor() {
-        const sec = document.getElementById('monitor-section');
-        sec.style.display = (sec.style.display === "block") ? "none" : "block";
-        if (sec.style.display === "block") await fetchServers();
-    }
-
-    async function fetchServers() {
-        const list = document.getElementById('server-list');
-        try {
-            const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(SUB_URL)}`;
-            const res = await fetch(proxyUrl);
-            const data = await res.json();
-            
-            const decoded = atob(data.contents);
-            const lines = decoded.split('\n').filter(l => l.includes('#'));
-            
-            list.innerHTML = '';
-            lines.forEach(l => {
-                const name = decodeURIComponent(l.split('#')[1]) || "Node";
-                const item = document.createElement('div');
-                item.className = 'server-item';
-                item.innerText = name;
-                list.appendChild(item);
-            });
-        } catch (e) {
-            list.innerHTML = '<div style="text-align:center; padding: 20px; color:red;">Ошибка загрузки списка серверов</div>';
-        }
-    }
-</script>
-
-</body>
-</html>
+        <h3 style="color: var(--lime-color);">Статус серве
