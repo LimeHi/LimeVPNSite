@@ -11,6 +11,8 @@
             --card-bg: #161616;
             --text-light: #ffffff;
             --tg-blue: #24A1DE;
+            --status-ok: #00FF00;
+            --status-err: #FF4444;
         }
 
         body {
@@ -56,7 +58,7 @@
         .sticky-card {
             position: sticky;
             top: 40px;
-            max-width: 700px;
+            max-width: 800px;
             margin: -100px auto 0;
             background: var(--card-bg);
             padding: 50px;
@@ -80,86 +82,89 @@
         .btn-group {
             display: flex;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
             margin-bottom: 40px;
         }
 
         .btn {
-            padding: 18px 35px;
+            padding: 18px 30px;
             border-radius: 50px;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
             border: none;
             text-decoration: none;
+            font-size: 0.95rem;
         }
 
         .btn-primary { background: var(--lime-color); color: #000; }
         .btn-secondary { background: transparent; color: var(--lime-color); border: 2px solid var(--lime-color); }
+        .btn-monitor { background: #333; color: white; border: 1px solid #444; }
 
-        /* ОБНОВЛЕННАЯ КНОПКА С ОФИЦИАЛЬНЫМ ЛОГОТИПОМ */
-        .tg-container {
+        .btn:hover { transform: translateY(-5px); filter: brightness(1.1); }
+
+        /* Таблица мониторинга */
+        #monitor-section {
+            display: none;
+            margin-top: 30px;
+            text-align: left;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .server-table {
+            width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn-tg-main {
-            background: var(--tg-blue);
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 25px rgba(36, 161, 222, 0.4);
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .btn-tg-white-circle {
-            background: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: #000;
+            border-radius: 15px;
             overflow: hidden;
         }
 
-        .btn-tg-white-circle img {
-            width: 100%; /* Занимает весь белый круг согласно оригиналу 2019 */
-            height: 100%;
-            object-fit: contain;
+        .server-table th, .server-table td {
+            padding: 15px;
+            border-bottom: 1px solid #222;
         }
 
-        .btn-tg-main:hover {
-            transform: scale(1.1);
-            box-shadow: 0 12px 35px rgba(36, 161, 222, 0.6);
-        }
+        .server-table th { background: #111; color: var(--lime-color); font-size: 0.8rem; text-transform: uppercase; }
 
-        #faq-container { display: none; margin-top: 40px; }
-
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            background: var(--lime-color);
-            color: #000;
-            text-align: center;
-            border-radius: 12px;
-            padding: 16px;
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 2000;
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
             font-weight: bold;
         }
 
+        .online { background: rgba(0, 255, 0, 0.1); color: var(--status-ok); }
+        .offline { background: rgba(255, 0, 0, 0.1); color: var(--status-err); }
+
+        /* TG Кнопка */
+        .btn-tg-main {
+            background: var(--tg-blue);
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            margin-top: 15px;
+        }
+        .btn-tg-white-circle {
+            background: white;
+            width: 55px; height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center; justify-content: center;
+        }
+        .btn-tg-white-circle img { width: 100%; height: 100%; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        #toast {
+            visibility: hidden; min-width: 250px; background: var(--lime-color); color: #000;
+            text-align: center; border-radius: 12px; padding: 16px; position: fixed;
+            bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 2000; font-weight: bold;
+        }
         #toast.show { visibility: visible; animation: fadeInOut 2.5s; }
         @keyframes fadeInOut { 0%, 100% { opacity: 0; } 20%, 80% { opacity: 1; } }
 
@@ -169,7 +174,7 @@
 
 <section class="hero-section">
     <h1>LIME VPN</h1>
-    <p>Самый стабильный, бесплатный и безопасный VPN сервис, с обходом белых списков.</p>
+    <p>Проверка статуса узлов в реальном времени.</p>
 </section>
 
 <div class="content-wrapper">
@@ -180,25 +185,33 @@
         
         <div class="btn-group">
             <button class="btn btn-primary" onclick="copySubscription()">Скопировать подписку</button>
-            <button class="btn btn-secondary" id="faqBtn" onclick="loadFAQ()">Как использовать?</button>
+            <button class="btn btn-monitor" onclick="toggleMonitor()">Мониторинг серверов</button>
+            <button class="btn btn-secondary" id="faqBtn" onclick="loadFAQ()">Инструкция</button>
         </div>
 
-        <div class="tg-container">
-            <span style="color: #888; font-weight: 500;">Наши соц-сети:</span>
+        <div id="monitor-section">
+            <h3 style="color: var(--lime-color);">Статус серверов:</h3>
+            <table class="server-table">
+                <thead>
+                    <tr>
+                        <th>Сервер</th>
+                        <th>Статус</th>
+                        <th>Ping</th>
+                    </tr>
+                </thead>
+                <tbody id="server-list">
+                    <tr><td colspan="3" style="text-align:center;">Загрузка данных...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <span style="color: #888; font-weight: 500; display: block; margin-bottom: 10px;">Наши соц-сети:</span>
             <a href="https://t.me/LimeVPNFREE" class="btn-tg-main" target="_blank">
                 <div class="btn-tg-white-circle">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG">
                 </div>
             </a>
-        </div>
-
-        <div id="faq-container">
-            <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                    data-telegram-post="LimeVPNFAQ/5" 
-                    data-width="100%" 
-                    data-color="32CD32" 
-                    data-dark="1">
-            </script>
         </div>
     </div>
 </div>
@@ -206,25 +219,87 @@
 <div id="toast">Ссылка скопирована!</div>
 
 <script>
+    const SUB_URL = "https://raw.githubusercontent.com/LimeHi/LimeVPN/refs/heads/main/LimeVPN.txt";
+    const PING_URL = "https://www.gstatic.com/generate_204";
+
     function copySubscription() {
-        const urlText = document.getElementById('subUrl').innerText;
-        navigator.clipboard.writeText(urlText).then(() => {
+        navigator.clipboard.writeText(SUB_URL).then(() => {
             const toast = document.getElementById("toast");
             toast.className = "show";
             setTimeout(() => { toast.className = ""; }, 2500);
         });
     }
 
-    function loadFAQ() {
-        const faq = document.getElementById('faq-container');
-        const btn = document.getElementById('faqBtn');
-        if (faq.style.display === "block") {
-            faq.style.display = "none";
-            btn.innerText = "Как использовать?";
+    async function toggleMonitor() {
+        const section = document.getElementById('monitor-section');
+        if (section.style.display === "block") {
+            section.style.display = "none";
         } else {
-            faq.style.display = "block";
-            btn.innerText = "Скрыть инструкцию";
+            section.style.display = "block";
+            await runMonitoring();
         }
+    }
+
+    async function runMonitoring() {
+        const list = document.getElementById('server-list');
+        list.innerHTML = '<tr><td colspan="3" style="text-align:center;">Опрашиваем подписку...</td></tr>';
+
+        try {
+            const response = await fetch(SUB_URL);
+            const text = await response.text();
+            
+            // Декодируем base64 подписку и ищем названия серверов
+            const decoded = atob(text);
+            const lines = decoded.split('\n').filter(line => line.includes('#'));
+            
+            if (lines.length === 0) {
+                list.innerHTML = '<tr><td colspan="3" style="text-align:center;">Серверы не найдены</td></tr>';
+                return;
+            }
+
+            list.innerHTML = '';
+
+            for (let line of lines) {
+                const serverName = decodeURIComponent(line.split('#')[1]) || "Безымянный узел";
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${serverName}</td>
+                    <td><span class="status-badge" id="status-${serverName}">Проверка...</span></td>
+                    <td id="ping-${serverName}">--</td>
+                `;
+                list.appendChild(row);
+
+                // Тест задержки
+                checkServer(serverName);
+            }
+        } catch (e) {
+            list.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Ошибка загрузки данных</td></tr>';
+        }
+    }
+
+    async function checkServer(name) {
+        const statusEl = document.getElementById(`status-${name}`);
+        const pingEl = document.getElementById(`ping-${name}`);
+        const start = Date.now();
+
+        try {
+            // Используем fetch с no-cors для проверки доступности gstatic через текущее соединение
+            await fetch(PING_URL, { mode: 'no-cors', cache: 'no-cache' });
+            const duration = Date.now() - start;
+            
+            statusEl.innerText = "ONLINE";
+            statusEl.className = "status-badge online";
+            pingEl.innerText = duration + " ms";
+        } catch (e) {
+            statusEl.innerText = "OFFLINE";
+            statusEl.className = "status-badge offline";
+            pingEl.innerText = "timeout";
+        }
+    }
+
+    function loadFAQ() {
+        alert("Скопируйте ссылку подписки и вставьте её в ваше приложение (V2Ray/Shadowsocks).");
     }
 </script>
 
