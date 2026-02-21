@@ -98,7 +98,7 @@
         .btn-primary { background: var(--lime-color); color: #000; }
         .btn-secondary { background: transparent; color: var(--lime-color); border: 2px solid var(--lime-color); }
 
-        /* ИСПРАВЛЕННАЯ КНОПКА TELEGRAM */
+        /* ОБНОВЛЕННАЯ КНОПКА С ОФИЦИАЛЬНЫМ ЛОГОТИПОМ */
         .tg-container {
             margin-top: 20px;
             display: flex;
@@ -109,8 +109,8 @@
 
         .btn-tg-main {
             background: var(--tg-blue);
-            width: 85px;
-            height: 85px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -122,20 +122,19 @@
 
         .btn-tg-white-circle {
             background: white;
-            width: 55px; /* Размер белого круга */
-            height: 55px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden; /* Чтобы иконка не вылазила */
+            overflow: hidden;
         }
 
-        .btn-tg-white-circle svg {
-            width: 32px; /* Размер самой иконки самолетика */
-            height: 32px;
-            fill: var(--tg-blue);
-            margin-right: 3px; /* Оптическое выравнивание */
+        .btn-tg-white-circle img {
+            width: 100%; /* Занимает весь белый круг согласно оригиналу 2019 */
+            height: 100%;
+            object-fit: contain;
         }
 
         .btn-tg-main:hover {
@@ -188,9 +187,7 @@
             <span style="color: #888; font-weight: 500;">Наши соц-сети:</span>
             <a href="https://t.me/LimeVPNFREE" class="btn-tg-main" target="_blank">
                 <div class="btn-tg-white-circle">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM16.64 8.8C16.49 9.38 15.17 14.88 14.5 17.61C14.4 18.04 14.23 18.18 14.07 18.2C13.73 18.23 13.47 17.98 13.14 17.76C12.63 17.42 12.34 17.21 11.85 16.89C11.28 16.51 11.65 16.3 11.97 15.96C12.06 15.87 13.52 14.54 13.55 14.41C13.55 14.4 13.55 14.34 13.52 14.31C13.48 14.28 13.44 14.29 13.41 14.3C13.36 14.31 12.63 14.8 11.22 15.75C11.01 15.89 10.82 15.96 10.65 15.96C10.46 15.96 10.08 15.85 9.8 15.76C9.46 15.65 9.18 15.59 9.21 15.4C9.22 15.3 9.37 15.2 9.65 15.09C11.39 14.33 12.55 13.83 13.13 13.58C14.78 12.89 15.12 12.77 15.35 12.77C15.4 12.77 15.51 12.78 15.58 12.84C15.64 12.89 15.66 12.96 15.66 13.01C15.66 13.07 15.65 13.18 15.64 13.29Z" />
-                    </svg>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Logo">
                 </div>
             </a>
         </div>
